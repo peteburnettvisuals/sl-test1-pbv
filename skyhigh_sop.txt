@@ -1,0 +1,52 @@
+SkyHigh Aerial Adventures: Standard Operating Procedure (SOP) v1.0
+
+SECTION 1: PRE-FLIGHT & EQUIPMENT (TRAINING PHASE)
+SOP-GEAR-01: The Main Canopy & Reserve All jumpers must utilize a dual-canopy system. The Main Ripcord (right side, chest height) deploys the primary chute. The Reserve Handle (left side, hip height) must only be used after a successful "Cut-away" of the main canopy.
+
+SOP-GEAR-02: The Altimeter The altimeter is the jumper's primary lifeline. Jumpers are trained to check their altitude every 5 seconds.
+
+5,000ft: Beginning of the "Decision Window."
+
+3,000ft: Mandatory Deployment Altitude.
+
+SOP-ENV-01: Weather Restrictions Jumpers must never board the aircraft if:
+
+Cloud cover is lower than 2,000ft (lack of ground visibility).
+
+Cumulonimbus (Thunderhead) formations are visible within a 10-mile radius.
+
+Ground wind speeds exceed 20 knots.
+
+SECTION 2: THE JUMP & MANEUVERS (SKILLS PHASE)
+SOP-BODY-01: The Stable Arch (The "Banana") Upon exiting the aircraft, the jumper must immediately adopt the "Stable Arch" position: Hips pushed forward, head back, and limbs symmetrical. Failure to arch will result in a "Tumble" (See Crisis Management).
+
+SOP-NAV-01: Steering & Toggles Steering is controlled via two toggles.
+
+Left Turn: Pull left toggle down toward the waist.
+
+Right Turn: Pull right toggle down toward the waist.
+
+The Flare: Pull both toggles down simultaneously at 10ft above ground to slow descent for landing.
+
+SECTION 3: CRISIS MANAGEMENT (MENTORSHIP PHASE)
+SOP-CRIS-01: Line Twists If the parachute deploys but the lines are twisted, preventing steering:
+
+Action: Reach above the head, grab the risers, and "bicycle kick" your legs in the opposite direction of the twist.
+
+Deadline: If not cleared by 2,500ft, initiate SOP-CRIS-03 (Cut-Away).
+
+SOP-CRIS-02: Water Landing (The "Drown Protocol") If a landing in water is unavoidable:
+
+Action: Unclip the chest strap immediately while in the air.
+
+Action: DO NOT unclip the leg straps until feet touch the water.
+
+Reasoning: This prevents the jumper from falling out of the harness too early, while allowing a quick exit to avoid being "cocooned" by the wet fabric.
+
+SOP-CRIS-03: The Cut-Away Procedure In the event of a total malfunction (Mal):
+
+Look: Identify the Cut-away handle (Red).
+
+Grab: Pull the Red handle to release the main chute.
+
+Pull: Pull the Reserve handle (Silver) immediately after.

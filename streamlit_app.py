@@ -1,13 +1,32 @@
 import streamlit as st
 import time
+import os
+import vertexai
+from vertexai.generative_models import GenerativeModel
+SOP_CONTENT = load_sop()
+
+# 1. Point to your downloaded key file 
+# (Make sure this file is in your GitHub folder and added to .gitignore)
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "gcp-key.json"
+
+# 2. Initialize with your Project ID from the screenshot
+PROJECT_ID = "ai-training-demo-1-482218"
+vertexai.init(project=PROJECT_ID, location="us-central1")
+
+# 3. Load the model
+model = GenerativeModel("gemini-1.5-flash")
 
 # --- 1. MOCK DATA & SOP ---
 # In production, this would be a PDF/Text file loaded into Vertex AI
-SOP_CONTENT = {
-    "SOP-GEAR-01": "The Red Handle (Chest) releases the main chute. The Silver Handle (Hip) deploys the reserve.",
-    "SOP-CRIS-03": "In a malfunction, 'Look, Grab, Pull' the Red handle first, then the Silver.",
-    "SOP-NAV-01": "To Flare: Pull both toggles to waist height at 10ft altitude."
-}
+# --- 1. DYNAMIC SOP LOADER ---
+def load_sop():
+    try:
+        with open("skyhigh_sop.txt", "r") as f:
+            return f.read()
+    except FileNotFoundError:
+        return "SOP file not found. Please upload skyhigh_sop.txt"
+
+SOP_CONTENT = load_sop()
 
 # --- 2. STYLED HEADER ---
 st.set_page_config(page_title="SkyHigh AI Learning", layout="wide")
@@ -71,21 +90,29 @@ elif st.session_state.user_path == "pro":
             st.markdown(message["content"])
 
     if prompt := st.chat_input("Ask a safety question..."):
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
 
-        # SIMULATED VERTEX AI RESPONSE
-        with st.chat_message("assistant"):
-            if "water" in prompt.lower():
-                response = f"**EMERGENCY:** {SOP_CONTENT['SOP-NAV-01']} is not for water. Refer to **SOP-CRIS-02**: Unclip chest strap, but keep leg straps until impact."
-            elif "spin" in prompt.lower() or "twist" in prompt.lower():
-                response = "According to **SOP-CRIS-01**, grab risers and bicycle kick. You have until 2,500ft to clear."
-            else:
-                response = "I am monitoring. Please focus on your altimeter. Refer to SOP-GEAR-02 for deployment heights."
-            
-            st.markdown(response)
-            st.session_state.messages.append({"role": "assistant", "content": response})
+    with st.chat_message("assistant"):
+        # This is the 'Super Prompt' that gives Gemini the SOP
+        full_prompt = f"""
+        You are the SkyHigh AI Mentor. 
+        Answer the following question using ONLY the provided SOP text. 
+        If the answer is not in the SOP, say you don't know and advise talking to an instructor.
+        
+        SOP TEXT:
+        {SOP_CONTENT}
+        
+        USER QUESTION:
+        {prompt}
+        """
+        
+        # Send everything to Gemini
+        response = model.generate_content(full_prompt)
+        
+        st.markdown(response.text)
+        st.session_state.messages.append({"role": "assistant", "content": response.text})
 
 # --- 5. RESET (For Demo Purposes) ---
 if st.sidebar.button("Reset Tech Demo"):
