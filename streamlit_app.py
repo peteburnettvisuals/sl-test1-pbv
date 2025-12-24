@@ -47,7 +47,7 @@ def training_module_1():
         st.session_state.quiz_active = True
     
     if st.session_state.quiz_active:
-    st.subheader(f"AI Verification (Requirement: 2 Correct | Current: {st.session_state.correct_count})")
+        st.subheader(f"AI Verification (Requirement: 2 Correct | Current: {st.session_state.correct_count})")
     
     # Progress bar for visual feedback
     st.progress(st.session_state.correct_count / 2)
