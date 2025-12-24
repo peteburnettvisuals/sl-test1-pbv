@@ -43,47 +43,50 @@ def training_module_1():
     st.title("🛠️ Phase 1: Equipment & Pre-Flight")
     st.video("https://www.youtube.com/watch?v=nC6D6NHjccI")
     
-    # Progress Display
-    st.write(f"**Mastery Level:** {st.session_state.correct_count} / 2 Correct Answers")
+    # 1. VISUAL PROGRESS (Now reflects the 'current' count immediately)
+    st.write(f"**Mastery Level:** {st.session_state.correct_count} / 2 Correct")
     st.progress(st.session_state.correct_count / 2)
 
     if st.button("Generate Training Scenario") or st.session_state.quiz_active:
         st.session_state.quiz_active = True
         
-        # We use a JSON-like prompt to keep the answer hidden from the UI
         if "current_question_text" not in st.session_state:
-            prompt = f"""
-            Based on {SOP_CONTENT}, generate a tough MCQ for skydiving equipment.
-            Output your response in exactly this format:
-            QUESTION: [Your question and options here]
-            ANSWER_KEY: [Single Letter Only]
-            """
+            prompt = f"Based on {SOP_CONTENT}, generate a tough MCQ. Output: QUESTION: [text] ANSWER_KEY: [Letter]"
             raw_response = model.generate_content(prompt).text
-            # Split the AI response to hide the key from the student
             st.session_state.current_question_text = raw_response.split("ANSWER_KEY:")[0]
             st.session_state.correct_answer = raw_response.split("ANSWER_KEY:")[1].strip()
 
         st.info(st.session_state.current_question_text)
         
-        user_choice = st.radio("Select your answer:", ["A", "B", "C", "D"], index=None)
+        # 2. THE RADIO BUTTON FIX: 
+        # Using a dynamic key ensures the radio buttons reset every time the count changes
+        user_choice = st.radio(
+            "Select your answer:", 
+            ["A", "B", "C", "D"], 
+            index=None, 
+            key=f"radio_step_{st.session_state.correct_count}"
+        )
         
         if st.button("Submit for Instructor Review"):
             if user_choice == st.session_state.correct_answer:
                 st.session_state.correct_count += 1
-                st.success(f"🎯 Correct! That is {st.session_state.correct_count}/2.")
-                
-                # Cleanup for the next question
-                del st.session_state.current_question_text
-                del st.session_state.correct_answer
                 
                 if st.session_state.correct_count >= 2:
                     st.balloons()
+                    st.success("🎯 2/2 Correct! Mastery achieved. Phase 2 is now unlocked in the sidebar.")
                     st.session_state.training_step = 2
-                    st.session_state.correct_count = 0 # Reset for the next module
+                    st.session_state.correct_count = 0 
                     st.session_state.quiz_active = False
-                st.rerun()
+                    # We remove the question state so it's fresh for the next time
+                    del st.session_state.current_question_text 
+                else:
+                    st.toast("Great job! One more to go.", icon="✅")
+                    del st.session_state.current_question_text
+                    st.rerun() # Refresh to update progress bar and get new Q
             else:
-                st.error("Incorrect. The instructor requires absolute precision. Refreshing for a new scenario.")
+                # 3. THE NOTIFICATION FIX:
+                st.error("❌ Incorrect. Precision is mandatory. Progress reset to 0/2.")
+                st.session_state.correct_count = 0
                 del st.session_state.current_question_text
                 st.rerun()
 
