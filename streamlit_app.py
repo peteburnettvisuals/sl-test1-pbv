@@ -1,16 +1,9 @@
-"""
-# My first app
-Here's our first attempt at using data to create a table:
-"""
-
 import streamlit as st
+import numpy as np
 import pandas as pd
 
-st.write("Here's our first attempt at using data to create a table:")
+map_data = pd.DataFrame(
+    np.random.randn(1000, 2) / [50, 50] + [37.76, -122.4],
+    columns=['lat', 'lon'])
 
-df = pd.DataFrame({
-  'first column': [1, 2, 3, 4],
-  'second column': [10, 20, 30, 40]
-})
-
-df
+st.map(map_data)
