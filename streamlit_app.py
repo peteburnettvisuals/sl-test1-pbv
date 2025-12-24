@@ -71,18 +71,25 @@ def training_module_1():
             if user_choice == st.session_state.correct_answer:
                 st.session_state.correct_count += 1
                 
+                # REFRESH PROGRESS BAR IMMEDIATELY
+                progress_value = st.session_state.correct_count / 2
+                
                 if st.session_state.correct_count >= 2:
+                    # Force the bar to 100% visually for the 'Success' state
+                    st.progress(1.0) 
                     st.balloons()
-                    st.success("🎯 2/2 Correct! Mastery achieved. Phase 2 is now unlocked in the sidebar.")
+                    st.success("🎯 2/2 Correct! Mastery achieved. Phase 2 is now unlocked.")
+                    
+                    # Store completion in session state so it stays unlocked
                     st.session_state.training_step = 2
                     st.session_state.correct_count = 0 
                     st.session_state.quiz_active = False
-                    # We remove the question state so it's fresh for the next time
                     del st.session_state.current_question_text 
                 else:
+                    st.progress(progress_value)
                     st.toast("Great job! One more to go.", icon="✅")
                     del st.session_state.current_question_text
-                    st.rerun() # Refresh to update progress bar and get new Q
+                    st.rerun()
             else:
                 # 3. THE NOTIFICATION FIX:
                 st.error("❌ Incorrect. Precision is mandatory. Progress reset to 0/2.")
