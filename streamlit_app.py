@@ -2,8 +2,12 @@ import streamlit as st
 import vertexai
 from vertexai.generative_models import GenerativeModel
 from google.oauth2 import service_account
-if "correct_count" not in st.session_state:
-    st.session_state.correct_count = 0
+if "count_m1" not in st.session_state:
+    st.session_state.count_m1 = 0
+if "count_m2" not in st.session_state:
+    st.session_state.count_m2 = 0
+if "count_m3" not in st.session_state:
+    st.session_state.count_m3 = 0
 
 # --- 1. INITIALIZATION & AUTH ---
 # This part stays common to all sections
@@ -39,72 +43,129 @@ if "quiz_active" not in st.session_state:
 
 # --- 3. PAGE DEFINITIONS ---
 
+# --- PHASE 1: EQUIPMENT ---
 def training_module_1():
     st.title("🛠️ Phase 1: Equipment & Pre-Flight")
     st.video("https://www.youtube.com/watch?v=nC6D6NHjccI")
     
-    # 1. VISUAL PROGRESS (Now reflects the 'current' count immediately)
-    st.write(f"**Mastery Level:** {st.session_state.correct_count} / 2 Correct")
-    st.progress(st.session_state.correct_count / 2)
+    st.write(f"**Mastery Level:** {st.session_state.count_m1} / 2 Correct")
+    st.progress(st.session_state.count_m1 / 2)
 
-    if st.button("Generate Training Scenario") or st.session_state.quiz_active:
+    if st.button("Generate Gear Scenario") or st.session_state.quiz_active:
         st.session_state.quiz_active = True
         
         if "current_question_text" not in st.session_state:
-            prompt = f"Based on {SOP_CONTENT}, generate a tough MCQ. Output: QUESTION: [text] ANSWER_KEY: [Letter]"
+            # Focus prompt on SOP-GEAR
+            prompt = f"Based on the SOP-GEAR section in {SOP_CONTENT}, generate a tough MCQ about gear checks. Output: QUESTION: [text] ANSWER_KEY: [Letter]"
             raw_response = model.generate_content(prompt).text
             st.session_state.current_question_text = raw_response.split("ANSWER_KEY:")[0]
             st.session_state.correct_answer = raw_response.split("ANSWER_KEY:")[1].strip()
 
         st.info(st.session_state.current_question_text)
+        user_choice = st.radio("Select answer:", ["A", "B", "C", "D"], index=None, key=f"m1_radio_{st.session_state.count_m1}")
         
-        # 2. THE RADIO BUTTON FIX: 
-        # Using a dynamic key ensures the radio buttons reset every time the count changes
-        user_choice = st.radio(
-            "Select your answer:", 
-            ["A", "B", "C", "D"], 
-            index=None, 
-            key=f"radio_step_{st.session_state.correct_count}"
-        )
-        
-        if st.button("Submit for Instructor Review"):
+        if st.button("Submit Phase 1 Answer"):
             if user_choice == st.session_state.correct_answer:
-                st.session_state.correct_count += 1
-                
-                # REFRESH PROGRESS BAR IMMEDIATELY
-                progress_value = st.session_state.correct_count / 2
-                
-                if st.session_state.correct_count >= 2:
-                    # Force the bar to 100% visually for the 'Success' state
-                    st.progress(1.0) 
+                st.session_state.count_m1 += 1
+                if st.session_state.count_m1 >= 2:
                     st.balloons()
-                    st.success("🎯 2/2 Correct! Mastery achieved. Phase 2 is now unlocked.")
-                    
-                    # Store completion in session state so it stays unlocked
+                    st.success("🎯 Mastery achieved! Phase 2: The Jump is now unlocked.")
                     st.session_state.training_step = 2
-                    st.session_state.correct_count = 0 
                     st.session_state.quiz_active = False
                     del st.session_state.current_question_text 
                 else:
-                    st.progress(progress_value)
-                    st.toast("Great job! One more to go.", icon="✅")
+                    st.toast("Great job! One more.", icon="✅")
                     del st.session_state.current_question_text
                     st.rerun()
             else:
-                # 3. THE NOTIFICATION FIX:
-                st.error("❌ Incorrect. Precision is mandatory. Progress reset to 0/2.")
-                st.session_state.correct_count = 0
+                st.error("❌ Incorrect. Gear safety is binary. Progress reset.")
+                st.session_state.count_m1 = 0
                 del st.session_state.current_question_text
                 st.rerun()
 
+# --- PHASE 2: MANEUVER ---
 def training_module_2():
     if st.session_state.training_step < 2:
-        st.warning("🔒 This module is locked. Please complete Phase 1 first.")
+        st.warning("🔒 Complete Phase 1 to unlock this module.")
     else:
         st.title("🍌 Phase 2: The Jump & Maneuvers")
-        st.write("Master the 'Banana' body position and your landing flare.")
         st.video("https://www.youtube.com/watch?v=ynNAC9a57ss")
-        # Add similar quiz logic here to unlock Phase 3...
+        
+        st.write(f"**Mastery Level:** {st.session_state.count_m2} / 2 Correct")
+        st.progress(st.session_state.count_m2 / 2)
+
+        if st.button("Generate Flight Scenario") or st.session_state.quiz_active:
+            st.session_state.quiz_active = True
+            if "current_question_text" not in st.session_state:
+                # Focus prompt on Body Position and Flare
+                prompt = f"Based on the maneuver and flare sections in {SOP_CONTENT}, generate a tough MCQ. Output: QUESTION: [text] ANSWER_KEY: [Letter]"
+                raw_response = model.generate_content(prompt).text
+                st.session_state.current_question_text = raw_response.split("ANSWER_KEY:")[0]
+                st.session_state.correct_answer = raw_response.split("ANSWER_KEY:")[1].strip()
+
+            st.info(st.session_state.current_question_text)
+            user_choice = st.radio("Select answer:", ["A", "B", "C", "D"], index=None, key=f"m2_radio_{st.session_state.count_m2}")
+            
+            if st.button("Submit Phase 2 Answer"):
+                if user_choice == st.session_state.correct_answer:
+                    st.session_state.count_m2 += 1
+                    if st.session_state.count_m2 >= 2:
+                        st.balloons()
+                        st.success("🎯 Mastery achieved! Phase 3: Survival is now unlocked.")
+                        st.session_state.training_step = 3
+                        st.session_state.quiz_active = False
+                        del st.session_state.current_question_text 
+                    else:
+                        st.toast("Solid form! One more.", icon="✅")
+                        del st.session_state.current_question_text
+                        st.rerun()
+                else:
+                    st.error("❌ Incorrect. Precision in the air is vital. Progress reset.")
+                    st.session_state.count_m2 = 0
+                    del st.session_state.current_question_text
+                    st.rerun()
+
+# --- PHASE 3: SURVIVAL ---
+def training_module_3():
+    if st.session_state.training_step < 3:
+        st.warning("🔒 Complete Phase 2 to unlock this module.")
+    else:
+        st.title("🚨 Phase 3: Crisis Management")
+        st.video("https://www.youtube.com/watch?v=nC6D6NHjccI")
+        
+        st.write(f"**Mastery Level:** {st.session_state.count_m3} / 2 Correct")
+        st.progress(st.session_state.count_m3 / 2)
+
+        if st.button("Generate Crisis Scenario") or st.session_state.quiz_active:
+            st.session_state.quiz_active = True
+            if "current_question_text" not in st.session_state:
+                # Focus prompt on SOP-CRIS (Emergency procedures)
+                prompt = f"Based on the SOP-CRIS section in {SOP_CONTENT}, generate a tough emergency procedure MCQ. Output: QUESTION: [text] ANSWER_KEY: [Letter]"
+                raw_response = model.generate_content(prompt).text
+                st.session_state.current_question_text = raw_response.split("ANSWER_KEY:")[0]
+                st.session_state.correct_answer = raw_response.split("ANSWER_KEY:")[1].strip()
+
+            st.info(st.session_state.current_question_text)
+            user_choice = st.radio("Select answer:", ["A", "B", "C", "D"], index=None, key=f"m3_radio_{st.session_state.count_m3}")
+            
+            if st.button("Submit Phase 3 Answer"):
+                if user_choice == st.session_state.correct_answer:
+                    st.session_state.count_m3 += 1
+                    if st.session_state.count_m3 >= 2:
+                        st.balloons()
+                        st.success("🎯 Course Complete! You are now cleared for the Active Jump Mentor.")
+                        st.session_state.training_step = 4
+                        st.session_state.quiz_active = False
+                        del st.session_state.current_question_text 
+                    else:
+                        st.toast("Cool under pressure! One more.", icon="✅")
+                        del st.session_state.current_question_text
+                        st.rerun()
+                else:
+                    st.error("❌ Incorrect. In a crisis, there is no room for error. Progress reset.")
+                    st.session_state.count_m3 = 0
+                    del st.session_state.current_question_text
+                    st.rerun()
 
 def active_mentor():
     st.title("🤖 Active Jump Mentor")
@@ -132,7 +193,7 @@ pg = st.navigation(pages)
 
 # --- 5. SIDEBAR UTILITIES ---
 with st.sidebar:
-    st.write(f"**Current Progress:** Phase {st.session_state.training_step} of 3")
+    st.write(f"**Current Progress:** Passed {st.session_state.training_step} of 3 Modules")
     if st.button("Reset Tech Demo"):
         st.session_state.training_step = 1
         st.rerun()
