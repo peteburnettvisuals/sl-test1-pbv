@@ -152,7 +152,13 @@ def training_module_3():
             st.session_state.quiz_active = True
             if "current_question_text" not in st.session_state:
                 # Focus prompt on SOP-CRIS (Emergency procedures)
-                prompt = f"Based on the SOP-CRIS section in {SOP_CONTENT}, generate a tough emergency procedure MCQ. Output: QUESTION: [text] ANSWER_KEY: [Letter]"
+                prompt = f"""
+Based ONLY on the SECTION 3: CRISIS MANAGEMENT section of this SOP: {SOP_CONTENT}
+Generate one MCQ. 
+STRICT RULE: Focus ONLY on body position (banana), steering, and landing flares.
+Do NOT ask about emergency procedures or malfunction heights.
+Output: QUESTION: [text] ANSWER_KEY: [Letter]
+"""
                 raw_response = model.generate_content(prompt).text
                 st.session_state.current_question_text = raw_response.split("ANSWER_KEY:")[0]
                 st.session_state.correct_answer = raw_response.split("ANSWER_KEY:")[1].strip()
