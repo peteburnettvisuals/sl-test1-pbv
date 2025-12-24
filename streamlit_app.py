@@ -215,6 +215,16 @@ with st.sidebar:
     st.write(f"**Current Progress:** Passed {st.session_state.training_step} of 3 Modules")
     if st.button("Reset Tech Demo"):
         st.session_state.training_step = 1
+        st.session_state.count_m1 = 0
+        st.session_state.count_m2 = 0
+        st.session_state.count_m3 = 0
+
+        # CLEAR THE AI CACHE
+        # This removes the "Current Question" so the next one is truly fresh
+        if "current_question_text" in st.session_state:
+            del st.session_state.current_question_text
+        if "correct_answer" in st.session_state:
+            del st.session_state.correct_answer
         st.rerun()
 
 pg.run()
