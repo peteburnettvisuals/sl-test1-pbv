@@ -45,15 +45,37 @@ def training_module_1():
     
     if st.session_state.quiz_active:
         st.subheader("AI Verification")
-        # Gemini generates a unique question based on the SOP-GEAR section
-        prompt = f"Based on this SOP: {SOP_CONTENT}, generate one hard MCQ about pre-flight gear checks."
-        question = model.generate_content(prompt).text
-        st.info(question)
         
-        if st.button("Submit & Unlock Next Phase"):
-            st.session_state.training_step = 2
-            st.session_state.quiz_active = False
-            st.success("Correct! Phase 2: The Jump is now unlocked in the sidebar.")
+        # 1. AI generates the question (if not already stored)
+        if "current_question" not in st.session_state:
+            prompt = f"Based on this SOP: {SOP_CONTENT}, generate one MCQ about pre-flight checks. End with 'Correct Answer: [Letter]'"
+            st.session_state.current_question = model.generate_content(prompt).text
+        
+        st.info(st.session_state.current_question)
+        
+        # 2. THE MISSING INPUT FIELD 
+        user_choice = st.radio("Select your answer:", ["A", "B", "C", "D"], index=None)
+        
+        # 3. VERIFICATION LOGIC
+        if st.button("Submit Answer"):
+            if user_choice:
+                # Ask Gemini to verify the user's specific choice against the SOP
+                check_prompt = f"SOP: {SOP_CONTENT}\nQuestion: {st.session_state.current_question}\nUser chose: {user_choice}. Is this correct? Answer only 'YES' or 'NO'."
+                is_correct = model.generate_content(check_prompt).text
+                
+                if "YES" in is_correct.upper():
+                    st.success(f"Correct! {user_choice} is the right procedure. Phase 2 Unlocked.")
+                    st.session_state.training_step = 2
+                    # Clear the quiz state for the next module
+                    del st.session_state.current_question
+                    st.session_state.quiz_active = False
+                else:
+                    st.error(f"Incorrect. Review the video and try a different question.")
+                    if st.button("Generate New Question"):
+                        del st.session_state.current_question
+                        st.rerun()
+            else:
+                st.warning("Please select an option first!")
 
 def training_module_2():
     if st.session_state.training_step < 2:
