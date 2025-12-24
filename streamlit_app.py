@@ -25,7 +25,7 @@ try:
     
     # Initialize Vertex AI with the secure credentials object
     PROJECT_ID = "ai-training-demo-1-482218"
-    vertexai.init(project=PROJECT_ID, location="us-central1", credentials=credentials)
+    vertexai.init(project=PROJECT_ID, location="europe-west2", credentials=credentials)
     
     # Load the Gemini Model
     model = GenerativeModel("gemini-1.5-flash")
