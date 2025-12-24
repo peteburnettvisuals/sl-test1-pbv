@@ -2,6 +2,8 @@ import streamlit as st
 import vertexai
 from vertexai.generative_models import GenerativeModel
 from google.oauth2 import service_account
+if "correct_count" not in st.session_state:
+    st.session_state.correct_count = 0
 
 # --- 1. INITIALIZATION & AUTH ---
 # This part stays common to all sections
@@ -26,8 +28,7 @@ def load_sop():
         return "SOP File not found."
 SOP_CONTENT = load_sop()
 
-if "correct_count" not in st.session_state:
-    st.session_state.correct_count = 0
+
 
 # --- 2. SESSION STATE (The App's Memory) ---
 # We use this to track training progress across pages
@@ -40,46 +41,50 @@ if "quiz_active" not in st.session_state:
 
 def training_module_1():
     st.title("🛠️ Phase 1: Equipment & Pre-Flight")
-    st.write("Watch the video below to learn about canopy checks and weather safety.")
     st.video("https://www.youtube.com/watch?v=nC6D6NHjccI")
     
-    if st.button("Start Phase 1 Quiz"):
-        st.session_state.quiz_active = True
-    
-    if st.session_state.quiz_active:
-        st.subheader(f"AI Verification (Requirement: 2 Correct | Current: {st.session_state.correct_count})")
-    
-    # Progress bar for visual feedback
+    # Progress Display
+    st.write(f"**Mastery Level:** {st.session_state.correct_count} / 2 Correct Answers")
     st.progress(st.session_state.correct_count / 2)
 
-    if "current_question" not in st.session_state:
-        prompt = f"Based on this SOP: {SOP_CONTENT}, generate one MCQ about pre-flight checks. End with 'Correct Answer: [Letter]'"
-        st.session_state.current_question = model.generate_content(prompt).text
-    
-    st.info(st.session_state.current_question)
-    user_choice = st.radio("Select your answer:", ["A", "B", "C", "D"], index=None, key=f"q_{st.session_state.correct_count}")
-    
-    if st.button("Submit Answer"):
-        if user_choice:
-            check_prompt = f"SOP: {SOP_CONTENT}\nQuestion: {st.session_state.current_question}\nUser chose: {user_choice}. Is this correct? Answer only 'YES' or 'NO'."
-            is_correct = model.generate_content(check_prompt).text
-            
-            if "YES" in is_correct.upper():
+    if st.button("Generate Training Scenario") or st.session_state.quiz_active:
+        st.session_state.quiz_active = True
+        
+        # We use a JSON-like prompt to keep the answer hidden from the UI
+        if "current_question_text" not in st.session_state:
+            prompt = f"""
+            Based on {SOP_CONTENT}, generate a tough MCQ for skydiving equipment.
+            Output your response in exactly this format:
+            QUESTION: [Your question and options here]
+            ANSWER_KEY: [Single Letter Only]
+            """
+            raw_response = model.generate_content(prompt).text
+            # Split the AI response to hide the key from the student
+            st.session_state.current_question_text = raw_response.split("ANSWER_KEY:")[0]
+            st.session_state.correct_answer = raw_response.split("ANSWER_KEY:")[1].strip()
+
+        st.info(st.session_state.current_question_text)
+        
+        user_choice = st.radio("Select your answer:", ["A", "B", "C", "D"], index=None)
+        
+        if st.button("Submit for Instructor Review"):
+            if user_choice == st.session_state.correct_answer:
                 st.session_state.correct_count += 1
-                del st.session_state.current_question # Clear to get a NEW question
+                st.success(f"🎯 Correct! That is {st.session_state.correct_count}/2.")
+                
+                # Cleanup for the next question
+                del st.session_state.current_question_text
+                del st.session_state.correct_answer
                 
                 if st.session_state.correct_count >= 2:
-                    st.success("🎯 2/2 Correct! Phase 2 is now unlocked.")
-                    st.session_state.training_step = 2
-                    st.session_state.correct_count = 0 # Reset for next module
-                    st.session_state.quiz_active = False
-                else:
                     st.balloons()
-                    st.success("Correct! One more to go to unlock Phase 2.")
-                    st.rerun() # Refresh to show the next AI question
+                    st.session_state.training_step = 2
+                    st.session_state.correct_count = 0 # Reset for the next module
+                    st.session_state.quiz_active = False
+                st.rerun()
             else:
-                st.error("Incorrect. The instructor requires absolute precision. Try this new question.")
-                del st.session_state.current_question
+                st.error("Incorrect. The instructor requires absolute precision. Refreshing for a new scenario.")
+                del st.session_state.current_question_text
                 st.rerun()
 
 def training_module_2():
