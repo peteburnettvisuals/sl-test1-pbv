@@ -26,6 +26,9 @@ def load_sop():
         return "SOP File not found."
 SOP_CONTENT = load_sop()
 
+if "correct_count" not in st.session_state:
+    st.session_state.correct_count = 0
+
 # --- 2. SESSION STATE (The App's Memory) ---
 # We use this to track training progress across pages
 if "training_step" not in st.session_state:
@@ -44,38 +47,40 @@ def training_module_1():
         st.session_state.quiz_active = True
     
     if st.session_state.quiz_active:
-        st.subheader("AI Verification")
-        
-        # 1. AI generates the question (if not already stored)
-        if "current_question" not in st.session_state:
-            prompt = f"Based on this SOP: {SOP_CONTENT}, generate one MCQ about pre-flight checks. End with 'Correct Answer: [Letter]'"
-            st.session_state.current_question = model.generate_content(prompt).text
-        
-        st.info(st.session_state.current_question)
-        
-        # 2. THE MISSING INPUT FIELD 
-        user_choice = st.radio("Select your answer:", ["A", "B", "C", "D"], index=None)
-        
-        # 3. VERIFICATION LOGIC
-        if st.button("Submit Answer"):
-            if user_choice:
-                # Ask Gemini to verify the user's specific choice against the SOP
-                check_prompt = f"SOP: {SOP_CONTENT}\nQuestion: {st.session_state.current_question}\nUser chose: {user_choice}. Is this correct? Answer only 'YES' or 'NO'."
-                is_correct = model.generate_content(check_prompt).text
+    st.subheader(f"AI Verification (Requirement: 2 Correct | Current: {st.session_state.correct_count})")
+    
+    # Progress bar for visual feedback
+    st.progress(st.session_state.correct_count / 2)
+
+    if "current_question" not in st.session_state:
+        prompt = f"Based on this SOP: {SOP_CONTENT}, generate one MCQ about pre-flight checks. End with 'Correct Answer: [Letter]'"
+        st.session_state.current_question = model.generate_content(prompt).text
+    
+    st.info(st.session_state.current_question)
+    user_choice = st.radio("Select your answer:", ["A", "B", "C", "D"], index=None, key=f"q_{st.session_state.correct_count}")
+    
+    if st.button("Submit Answer"):
+        if user_choice:
+            check_prompt = f"SOP: {SOP_CONTENT}\nQuestion: {st.session_state.current_question}\nUser chose: {user_choice}. Is this correct? Answer only 'YES' or 'NO'."
+            is_correct = model.generate_content(check_prompt).text
+            
+            if "YES" in is_correct.upper():
+                st.session_state.correct_count += 1
+                del st.session_state.current_question # Clear to get a NEW question
                 
-                if "YES" in is_correct.upper():
-                    st.success(f"Correct! {user_choice} is the right procedure. Phase 2 Unlocked.")
+                if st.session_state.correct_count >= 2:
+                    st.success("🎯 2/2 Correct! Phase 2 is now unlocked.")
                     st.session_state.training_step = 2
-                    # Clear the quiz state for the next module
-                    del st.session_state.current_question
+                    st.session_state.correct_count = 0 # Reset for next module
                     st.session_state.quiz_active = False
                 else:
-                    st.error(f"Incorrect. Review the video and try a different question.")
-                    if st.button("Generate New Question"):
-                        del st.session_state.current_question
-                        st.rerun()
+                    st.balloons()
+                    st.success("Correct! One more to go to unlock Phase 2.")
+                    st.rerun() # Refresh to show the next AI question
             else:
-                st.warning("Please select an option first!")
+                st.error("Incorrect. The instructor requires absolute precision. Try this new question.")
+                del st.session_state.current_question
+                st.rerun()
 
 def training_module_2():
     if st.session_state.training_step < 2:
