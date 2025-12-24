@@ -56,7 +56,13 @@ def training_module_1():
         
         if "current_question_text" not in st.session_state:
             # Focus prompt on SOP-GEAR
-            prompt = f"Based on the SOP-GEAR section in {SOP_CONTENT}, generate a tough MCQ about gear checks. Output: QUESTION: [text] ANSWER_KEY: [Letter]"
+            prompt = f"""
+Based ONLY on the SECTION 1: PRE-FLIGHT & EQUIPMENT section of this SOP: {SOP_CONTENT}
+Generate one MCQ. 
+STRICT RULE: Do NOT ask about line twists, cut-aways, or malfunctions.
+Focus ONLY on gear checks, weather minimums, or altimeters.
+Output: QUESTION: [text] ANSWER_KEY: [Letter]
+"""
             raw_response = model.generate_content(prompt).text
             st.session_state.current_question_text = raw_response.split("ANSWER_KEY:")[0]
             st.session_state.correct_answer = raw_response.split("ANSWER_KEY:")[1].strip()
@@ -98,7 +104,13 @@ def training_module_2():
             st.session_state.quiz_active = True
             if "current_question_text" not in st.session_state:
                 # Focus prompt on Body Position and Flare
-                prompt = f"Based on the maneuver and flare sections in {SOP_CONTENT}, generate a tough MCQ. Output: QUESTION: [text] ANSWER_KEY: [Letter]"
+                prompt = f"""
+Based ONLY on the SECTION 2: THE JUMP & MANEUVERS (SKILLS PHASE) section of this SOP: {SOP_CONTENT}
+Generate one MCQ. 
+STRICT RULE: Focus ONLY on body position (banana), steering, and landing flares.
+Do NOT ask about emergency procedures or malfunction heights.
+Output: QUESTION: [text] ANSWER_KEY: [Letter]
+"""
                 raw_response = model.generate_content(prompt).text
                 st.session_state.current_question_text = raw_response.split("ANSWER_KEY:")[0]
                 st.session_state.correct_answer = raw_response.split("ANSWER_KEY:")[1].strip()
@@ -183,6 +195,7 @@ pages = {
     "Training Hangar": [
         st.Page(training_module_1, title="1. Pre-Flight", icon="🛠️"),
         st.Page(training_module_2, title="2. The Jump", icon="🍌"),
+        st.Page(training_module_3, title="3. Crisis Mgmt", icon="🚨"),
     ],
     "Operations": [
         st.Page(active_mentor, title="Live Jump Mentor", icon="🛩️"),
