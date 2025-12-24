@@ -1,5 +1,13 @@
 import streamlit as st
-st.text_input("Your name", key="name")
+import pandas as pd
 
-# You can access the value at any point with:
-st.session_state.name
+df = pd.DataFrame({
+    'first column': [1, 2, 3, 4],
+    'second column': [10, 20, 30, 40]
+    })
+
+option = st.selectbox(
+    'Which number do you like best?',
+     df['first column'])
+
+'You selected: ', option
