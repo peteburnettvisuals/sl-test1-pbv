@@ -28,7 +28,7 @@ try:
     vertexai.init(project=PROJECT_ID, location="europe-west2", credentials=credentials)
     
     # Load the Gemini Model
-    model = GenerativeModel("gemini-1.5-flash")
+    model = GenerativeModel("gemini-2.0-flash-001")
 except Exception as e:
     st.error(f"Authentication Setup Required: Please add your JSON key to Streamlit Secrets. Error: {e}")
 
