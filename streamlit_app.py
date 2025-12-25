@@ -131,9 +131,19 @@ def training_module_2():
         st.progress(st.session_state.count_m2 / 2)
 
         if st.session_state.count_m2 == 0:
-            focus2 = "Focus strictly on the Stable Arch position (The Banana) and exit procedures. DO NOT ask about steering or toggles yet."
+        # Hard isolation: The AI is forbidden from mentioning navigation
+            focus2 = """
+            Focus EXCLUSIVELY on the 'Stable Arch' (The Banana) body position and aircraft exit. 
+            STRICT PROHIBITION: Do NOT mention toggles, steering, turns, or flares. 
+            If the question mentions a parachute handle or steering, it is a failure of this instruction.
+            """
         else:
-            focus2 = "Focus on landing patterns, altitude awareness during canopy flight, or the final flare. DO NOT ask about basic left/right turns."
+        # Shift focus to landing patterns specifically to avoid basic steering loops
+            focus2 = """
+            Focus EXCLUSIVELY on the falre technique (SOP-NAV-01). 
+            STRICT PROHIBITION: Do NOT ask about basic left/right turns or 'how to steer'. 
+            Focus on altitudes for the downwind or base leg.
+            """
 
         if st.button("Generate Jump Scenario") or st.session_state.quiz_active:
             st.session_state.quiz_active = True
