@@ -217,7 +217,7 @@ pages = {
         st.Page(training_module_1, title="1. Pre-Flight", icon="🛠️"),
         st.Page(training_module_2, title="2. The Jump", icon="🍌"),
         st.Page(training_module_3, title="3. Crisis Mgmt", icon="🚨"),
-    ]
+    ],
         # Update your navigation logic to include the graduation if training is complete
         "Operations": [
         st.Page(active_mentor, title="Live Jump Mentor", icon="🛩️"),
@@ -226,7 +226,7 @@ pages = {
 
 if st.session_state.training_step > 3:
     pages["Training Hangar"].append(st.Page(graduation_screen, title="Graduation", icon="🎓"))
-    ],
+    
 
 pg = st.navigation(pages)
 
