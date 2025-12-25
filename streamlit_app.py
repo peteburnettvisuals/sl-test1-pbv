@@ -158,8 +158,8 @@ def training_module_3():
                 prompt = f"""
 Based ONLY on the SECTION 3: CRISIS MANAGEMENT section of this SOP: {SOP_CONTENT}
 Generate one MCQ. 
-STRICT RULE: Focus ONLY on body position (banana), steering, and landing flares.
-Do NOT ask about emergency procedures or malfunction heights.
+STRICT RULE: Focus ONLY on emergency procedures, malfunction identification, and cut-away protocols. 
+            Do NOT ask about body position, landing flares, or normal steering.
 Output: QUESTION: [text] ANSWER_KEY: [Letter]
 """
                 raw_response = model.generate_content(prompt).text
