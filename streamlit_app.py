@@ -80,6 +80,10 @@ Output: QUESTION: [text] ANSWER_KEY: [Letter]
                     st.session_state.training_step = 2
                     st.session_state.quiz_active = False
                     del st.session_state.current_question_text 
+                    # 2. Add a pause so they see the balloons and success message
+                    time.sleep(3) 
+                    # 3. Jump to next module
+                    st.switch_page(st.Page(training_module_2))
                 else:
                     st.toast("Great job! One more.", icon="✅")
                     del st.session_state.current_question_text
@@ -89,6 +93,7 @@ Output: QUESTION: [text] ANSWER_KEY: [Letter]
                 time.sleep(2)
                 st.session_state.count_m1 = 0
                 del st.session_state.current_question_text
+                key=f"m1_radio_{st.session_state.count_m1}"
                 st.rerun()
 
 # --- PHASE 2: MANEUVER ---
@@ -102,7 +107,7 @@ def training_module_2():
         st.write(f"**Mastery Level:** {st.session_state.count_m2} / 2 Correct")
         st.progress(st.session_state.count_m2 / 2)
 
-        if st.button("Generate Flight Scenario") or st.session_state.quiz_active:
+        if st.button("Generate Jump Scenario") or st.session_state.quiz_active:
             st.session_state.quiz_active = True
             if "current_question_text" not in st.session_state:
                 # Focus prompt on Body Position and Flare
@@ -125,10 +130,14 @@ Output: QUESTION: [text] ANSWER_KEY: [Letter]
                     st.session_state.count_m2 += 1
                     if st.session_state.count_m2 >= 2:
                         st.balloons()
-                        st.success("🎯 Mastery achieved! Phase 3: Survival is now unlocked.")
+                        st.success("🎯 Mastery achieved! Phase 3: Crisis Mgmt is now unlocked.")
                         st.session_state.training_step = 3
                         st.session_state.quiz_active = False
-                        del st.session_state.current_question_text 
+                        del st.session_state.current_question_text
+                        # 2. Add a pause so they see the balloons and success message
+                        time.sleep(3) 
+                        # 3. Jump to next module
+                        st.switch_page(st.Page(training_module_3)) 
                     else:
                         st.toast("Solid form! One more.", icon="✅")
                         del st.session_state.current_question_text
@@ -192,7 +201,7 @@ Output: QUESTION: [text] ANSWER_KEY: [Letter]
                     time.sleep(2)
                     st.session_state.count_m3 = 0
                     del st.session_state.current_question_text
-                    key=f"m3_radio_{st.session_state.count_m2}"
+                    key=f"m3_radio_{st.session_state.count_m3}"
                     st.rerun()
 
 def active_mentor():
