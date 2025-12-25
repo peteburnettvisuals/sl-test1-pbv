@@ -71,9 +71,9 @@ def training_module_1():
     st.progress(st.session_state.count_m1 / 2)
 
     if st.session_state.count_m1 == 0:
-        focus1 = "Focus strictly on WEATHER and WIND limits."
+        focus1 = "Focus strictly on WEATHER conditions found in SOP-ENV-01."
     else:
-        focus1 = "Focus strictly on HARNESS and ALTIMETER checks."
+        focus1 = "Focus strictly on HARNESS and ALTIMETER checks found in SOP-GEAR-02."
 
     if st.button("Generate Gear Scenario") or st.session_state.quiz_active:
         st.session_state.quiz_active = True
@@ -81,7 +81,7 @@ def training_module_1():
         if "current_question_text" not in st.session_state:
             # Focus prompt on SOP-GEAR
             prompt = f"""
-Based ONLY on the SECTION 1: PRE-FLIGHT & EQUIPMENT section of this SOP: {SOP_CONTENT}, {focus1},
+Based ONLY on SECTION 1 of this SOP: {SOP_CONTENT}, {focus1},
 Generate one MCQ. 
 You MUST include the lettered answer options in the question.
 Output: QUESTION: [text] ANSWER_KEY: [Letter]  
@@ -130,16 +130,16 @@ def training_module_2():
         st.progress(st.session_state.count_m2 / 2)
 
         if st.session_state.count_m2 == 0:
-            focus2 = "Focus strictly on Stable Arch body position."
+            focus2 = "Focus strictly on the correct Stable Arch body position found in SOP-BODY-01."
         else:
-            focus2 = "Focus strictly on toggles & steering."
+            focus2 = "Focus strictly on toggles & steering found in SOP-NAV-01."
 
         if st.button("Generate Jump Scenario") or st.session_state.quiz_active:
             st.session_state.quiz_active = True
             if "current_question_text" not in st.session_state:
                 # Focus prompt on Body Position and Flare
                 prompt = f"""
-Based ONLY on the SECTION 2: THE JUMP & MANEUVERS (SKILLS PHASE) section of this SOP: {SOP_CONTENT}, {focus2},
+Based ONLY on SECTION 2 of this SOP: {SOP_CONTENT}, {focus2},
 Generate one MCQ. 
 You MUST include the lettered answer options in the question.
 Output: QUESTION: [text] ANSWER_KEY: [Letter]
@@ -188,16 +188,16 @@ def training_module_3():
         st.progress(st.session_state.count_m3 / 2)
 
         if st.session_state.count_m3 == 0:
-            focus3 = "Focus strictly on water landings."
+            focus3 = "Focus strictly on water landings covered in SOP-CRIS-02."
         else:
-            focus3 = "Focus strictly on cut away procedure."
+            focus3 = "Focus strictly on cut away procedure covered in SOP-CRIS-03."
 
         if st.button("Generate Crisis Scenario") or st.session_state.quiz_active:
             st.session_state.quiz_active = True
             if "current_question_text" not in st.session_state:
                 # Focus prompt on SOP-CRIS (Emergency procedures)
                 prompt = f"""
-Based ONLY on the SECTION 3: CRISIS MANAGEMENT section of this SOP: {SOP_CONTENT}, {focus3}
+Based ONLY on SECTION 3 of this SOP: {SOP_CONTENT}, {focus3}
 Generate one MCQ. 
 You MUST include the lettered answer options in the question.
 Output: QUESTION: [text] ANSWER_KEY: [Letter]
