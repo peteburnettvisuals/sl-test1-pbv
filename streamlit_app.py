@@ -70,16 +70,20 @@ def training_module_1():
     st.write(f"**Mastery Level:** {st.session_state.count_m1} / 2 Correct")
     st.progress(st.session_state.count_m1 / 2)
 
+    if st.session_state.count_m1 == 0:
+        focus1 = "Focus strictly on WEATHER and WIND limits."
+    else:
+        focus1 = "Focus strictly on HARNESS and ALTIMETER checks."
+
     if st.button("Generate Gear Scenario") or st.session_state.quiz_active:
         st.session_state.quiz_active = True
         
         if "current_question_text" not in st.session_state:
             # Focus prompt on SOP-GEAR
             prompt = f"""
-Based ONLY on the SECTION 1: PRE-FLIGHT & EQUIPMENT section of this SOP: {SOP_CONTENT}
+Based ONLY on the SECTION 1: PRE-FLIGHT & EQUIPMENT section of this SOP: {SOP_CONTENT}, {focus1},
 Generate one MCQ. 
-STRICT RULE: Do NOT ask about line twists, cut-aways, or malfunctions.
-Focus ONLY on gear checks, weather minimums, or altimeters.  You MUST include the lettered answer options in the question.
+You MUST include the lettered answer options in the question.
 Output: QUESTION: [text] ANSWER_KEY: [Letter]  
 """
             raw_response = model.generate_content(prompt).text
@@ -125,15 +129,19 @@ def training_module_2():
         st.write(f"**Mastery Level:** {st.session_state.count_m2} / 2 Correct")
         st.progress(st.session_state.count_m2 / 2)
 
+        if st.session_state.count_m2 == 0:
+            focus2 = "Focus strictly on Stable Arch body position."
+        else:
+            focus2 = "Focus strictly on toggles & steering."
+
         if st.button("Generate Jump Scenario") or st.session_state.quiz_active:
             st.session_state.quiz_active = True
             if "current_question_text" not in st.session_state:
                 # Focus prompt on Body Position and Flare
                 prompt = f"""
-Based ONLY on the SECTION 2: THE JUMP & MANEUVERS (SKILLS PHASE) section of this SOP: {SOP_CONTENT}
+Based ONLY on the SECTION 2: THE JUMP & MANEUVERS (SKILLS PHASE) section of this SOP: {SOP_CONTENT}, {focus2},
 Generate one MCQ. 
-STRICT RULE: Focus ONLY on body position (banana), or steering, or landing flares.
-Do NOT ask about emergency procedures or malfunction heights. You MUST include the lettered answer options in the question.
+You MUST include the lettered answer options in the question.
 Output: QUESTION: [text] ANSWER_KEY: [Letter]
 """
                 raw_response = model.generate_content(prompt).text
@@ -179,15 +187,19 @@ def training_module_3():
         st.write(f"**Mastery Level:** {st.session_state.count_m3} / 2 Correct")
         st.progress(st.session_state.count_m3 / 2)
 
+        if st.session_state.count_m3 == 0:
+            focus3 = "Focus strictly on water landings."
+        else:
+            focus3 = "Focus strictly on cut away procedure."
+
         if st.button("Generate Crisis Scenario") or st.session_state.quiz_active:
             st.session_state.quiz_active = True
             if "current_question_text" not in st.session_state:
                 # Focus prompt on SOP-CRIS (Emergency procedures)
                 prompt = f"""
-Based ONLY on the SECTION 3: CRISIS MANAGEMENT section of this SOP: {SOP_CONTENT}
+Based ONLY on the SECTION 3: CRISIS MANAGEMENT section of this SOP: {SOP_CONTENT}, {focus3}
 Generate one MCQ. 
-STRICT RULE: Focus ONLY on emergency procedures, malfunction identification, and cut-away protocols. 
-            Do NOT ask about body position, landing flares, or normal steering.  You MUST include the lettered answer options in the question.
+You MUST include the lettered answer options in the question.
 Output: QUESTION: [text] ANSWER_KEY: [Letter]
 """
                 raw_response = model.generate_content(prompt).text
@@ -224,7 +236,7 @@ Output: QUESTION: [text] ANSWER_KEY: [Letter]
 
 def active_mentor():
     st.title("🤖 Active Jump Mentor")
-    st.write("Grounding Q&A enabled. Ask me anything about the SkyHigh SOP.")
+    st.write("This is a live Q&A assistant for qualified SkyHigh graduates. All questions will be answered based exclusively on the SkyHigh SOP. This demo uses a system called RAG to ensure that all answers are correct and no AI hallucinations will be returned.")
     # Your existing Chatbot code (from previous version) fits here!
     user_input = st.chat_input("Ask a safety question...")
     if user_input:
@@ -250,7 +262,7 @@ pages = {
     "Training Hangar": [
         st.Page(training_module_1, title="1. Pre-Flight", icon="🛠️"),
         st.Page(training_module_2, title="2. The Jump", icon="🍌"),
-        st.Page(training_module_3, title="3. Survival", icon="🚨"),
+        st.Page(training_module_3, title="3. Crisis Mgmt", icon="🚨"),
     ]
 }
 
