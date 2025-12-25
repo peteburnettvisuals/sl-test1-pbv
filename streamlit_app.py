@@ -199,6 +199,17 @@ def active_mentor():
         response = model.generate_content(f"SOP Context: {SOP_CONTENT}\nUser Question: {user_input}")
         with st.chat_message("assistant"): st.write(response.text)
 
+def graduation_screen():
+    st.balloons()
+    st.title("🎓 Certified SkyHigh Jumper")
+    st.success("Congratulations! You have mastered all three phases of the SkyHigh SOP.")
+    st.write("You are now officially cleared to use the **Active Jump Mentor** for real-time mission support.")
+    
+    # Show a mock certificate
+    st.info("CERTIFICATE ID: SH-2025-" + str(st.session_state.count_m1 + 99))
+
+
+
 # --- 4. SIDEBAR NAVIGATION ---
 # This generates the menu you requested
 pages = {
@@ -206,11 +217,15 @@ pages = {
         st.Page(training_module_1, title="1. Pre-Flight", icon="🛠️"),
         st.Page(training_module_2, title="2. The Jump", icon="🍌"),
         st.Page(training_module_3, title="3. Crisis Mgmt", icon="🚨"),
-    ],
-    "Operations": [
+        # Update your navigation logic to include the graduation if training is complete
+        "Operations": [
         st.Page(active_mentor, title="Live Jump Mentor", icon="🛩️"),
     ]
 }
+
+if st.session_state.training_step > 3:
+    pages["Training Hangar"].append(st.Page(graduation_screen, title="Graduation", icon="🎓"))
+    ],
 
 pg = st.navigation(pages)
 
