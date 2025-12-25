@@ -292,7 +292,7 @@ pg = st.navigation(pages)
 
 # --- 5. SIDEBAR UTILITIES ---
 with st.sidebar:
-    st.write(f"**Current Progress:** Passed {st.session_state.training_step} of 3 Modules")
+    st.write(f"**Current Progress:** You are at stage {st.session_state.training_step} of 4")
     if st.button("Reset Tech Demo"):
         st.session_state.training_step = 1
         st.session_state.count_m1 = 0
