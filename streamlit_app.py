@@ -138,6 +138,7 @@ Output: QUESTION: [text] ANSWER_KEY: [Letter]
                     time.sleep(2)
                     st.session_state.count_m2 = 0
                     del st.session_state.current_question_text
+                    key=f"m2_radio_{st.session_state.count_m2}"
                     st.rerun()
 
 # --- PHASE 3: SURVIVAL ---
@@ -178,6 +179,10 @@ Output: QUESTION: [text] ANSWER_KEY: [Letter]
                         st.session_state.training_step = 4
                         st.session_state.quiz_active = False
                         del st.session_state.current_question_text 
+                        # 2. Add a pause so they see the balloons and success message
+                        time.sleep(3) 
+                        # 3. Force a rerun to update the sidebar navigation immediately
+                        st.rerun()
                     else:
                         st.toast("Cool under pressure! One more.", icon="✅")
                         del st.session_state.current_question_text
@@ -187,6 +192,7 @@ Output: QUESTION: [text] ANSWER_KEY: [Letter]
                     time.sleep(2)
                     st.session_state.count_m3 = 0
                     del st.session_state.current_question_text
+                    key=f"m3_radio_{st.session_state.count_m2}"
                     st.rerun()
 
 def active_mentor():
