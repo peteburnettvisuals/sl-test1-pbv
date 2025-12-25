@@ -50,7 +50,7 @@ if "quiz_active" not in st.session_state:
 def welcome_home():
     st.title("🪂 Welcome to SkyHigh AI Training")
 
-    st.video("https://vimeo.com/1149354703")
+    st.video("https://vimeo.com/1149354703?share=copy&fl=sv&fe=ci")
 
     st.markdown("""
     ### Purpose of this Demo
