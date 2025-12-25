@@ -61,8 +61,8 @@ def training_module_1():
 Based ONLY on the SECTION 1: PRE-FLIGHT & EQUIPMENT section of this SOP: {SOP_CONTENT}
 Generate one MCQ. 
 STRICT RULE: Do NOT ask about line twists, cut-aways, or malfunctions.
-Focus ONLY on gear checks, weather minimums, or altimeters.
-Output: QUESTION: [text] ANSWER_KEY: [Letter]
+Focus ONLY on gear checks, weather minimums, or altimeters.  You MUST include the lettered answer options in the question.
+Output: QUESTION: [text] ANSWER_KEY: [Letter]  
 """
             raw_response = model.generate_content(prompt).text
             st.session_state.current_question_text = raw_response.split("ANSWER_KEY:")[0]
@@ -110,7 +110,7 @@ def training_module_2():
 Based ONLY on the SECTION 2: THE JUMP & MANEUVERS (SKILLS PHASE) section of this SOP: {SOP_CONTENT}
 Generate one MCQ. 
 STRICT RULE: Focus ONLY on body position (banana), steering, and landing flares.
-Do NOT ask about emergency procedures or malfunction heights.
+Do NOT ask about emergency procedures or malfunction heights. You MUST include the lettered answer options in the question.
 Output: QUESTION: [text] ANSWER_KEY: [Letter]
 """
                 raw_response = model.generate_content(prompt).text
@@ -160,7 +160,7 @@ def training_module_3():
 Based ONLY on the SECTION 3: CRISIS MANAGEMENT section of this SOP: {SOP_CONTENT}
 Generate one MCQ. 
 STRICT RULE: Focus ONLY on emergency procedures, malfunction identification, and cut-away protocols. 
-            Do NOT ask about body position, landing flares, or normal steering.
+            Do NOT ask about body position, landing flares, or normal steering.  You MUST include the lettered answer options in the question.
 Output: QUESTION: [text] ANSWER_KEY: [Letter]
 """
                 raw_response = model.generate_content(prompt).text
