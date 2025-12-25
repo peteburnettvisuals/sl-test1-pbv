@@ -244,24 +244,25 @@ def graduation_screen():
 
 
 # --- 4. SIDEBAR NAVIGATION ---
-# This generates the menu you requested
+# 1. Start with the pages everyone can see
 pages = {
     "Start Here": [st.Page(welcome_home, title="Welcome", icon="🏠")],
     "Training Hangar": [
         st.Page(training_module_1, title="1. Pre-Flight", icon="🛠️"),
         st.Page(training_module_2, title="2. The Jump", icon="🍌"),
-        st.Page(training_module_3, title="3. Crisis Mgmt", icon="🚨"),
-    ],
-        # Update your navigation logic to include the graduation if training is complete
-        "Operations": [
-        st.Page(active_mentor, title="Live Jump Mentor", icon="🛩️"),
+        st.Page(training_module_3, title="3. Survival", icon="🚨"),
     ]
 }
 
+# 2. Add Graduation AND Operations only if they passed Phase 3
 if st.session_state.training_step > 3:
+    # Add Graduation to the Training Hangar list
     pages["Training Hangar"].append(st.Page(graduation_screen, title="Graduation", icon="🎓"))
     
+    # Create the Operations section from scratch
+    pages["Operations"] = [st.Page(active_mentor, title="Live Jump Mentor", icon="🛩️")]
 
+# 3. Finalize Navigation
 pg = st.navigation(pages)
 
 # --- 5. SIDEBAR UTILITIES ---
