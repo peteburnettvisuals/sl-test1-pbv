@@ -44,6 +44,24 @@ if "quiz_active" not in st.session_state:
 
 # --- 3. PAGE DEFINITIONS ---
 
+
+# --- Home Screen
+
+def welcome_home():
+    st.title("🪂 Welcome to SkyHigh AI Training")
+    st.markdown("""
+    ### Purpose of this Demo
+    This tech demo from Pete Burnett Visuals uses **Gemini 2.0 Flash** to ensure every jumper is 100% prepared for the skies. 
+    Unlike static tests, our AI instructor generates dynamic scenarios, with all questions and responses based solely on real SOPs.
+    
+    ### How it Works
+    1. **Mastery Modules**: You must pass 3 phases (PreFlight, Jump, and Crisis).
+    2. **The 2/2 Rule**: You must answer two consecutive questions correctly to progress.
+    3. **Live Mentor**: Once graduated, you unlock a real-time safety assistant.
+    """)
+    if st.button("Begin Training"):
+        st.switch_page(st.Page(training_module_1))
+
 # --- PHASE 1: EQUIPMENT ---
 def training_module_1():
     st.title("🛠️ Phase 1: Equipment & Pre-Flight")
@@ -228,6 +246,7 @@ def graduation_screen():
 # --- 4. SIDEBAR NAVIGATION ---
 # This generates the menu you requested
 pages = {
+    "Start Here": [st.Page(welcome_home, title="Welcome", icon="🏠")],
     "Training Hangar": [
         st.Page(training_module_1, title="1. Pre-Flight", icon="🛠️"),
         st.Page(training_module_2, title="2. The Jump", icon="🍌"),
