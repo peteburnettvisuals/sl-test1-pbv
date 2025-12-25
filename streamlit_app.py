@@ -82,9 +82,11 @@ def training_module_1():
             # Focus prompt on SOP-GEAR
             prompt = f"""
 Based ONLY on SECTION 1 of this SOP: {SOP_CONTENT}, {focus1},
-Generate one MCQ. 
-You MUST include the lettered answer options in the question.
-Output: QUESTION: [text] ANSWER_KEY: [Letter]  
+STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factually correct according to the SOP.
+            The other three options must be definitively WRONG based on the text. 
+            Avoid "All of the above" or "None of the above" scenarios.
+            You MUST include the lettered answer options in the question.
+            Output: QUESTION: [text] ANSWER_KEY: [Letter] 
 """
             raw_response = model.generate_content(prompt).text
             st.session_state.current_question_text = raw_response.split("ANSWER_KEY:")[0]
@@ -115,7 +117,6 @@ Output: QUESTION: [text] ANSWER_KEY: [Letter]
                 time.sleep(2)
                 st.session_state.count_m1 = 0
                 del st.session_state.current_question_text
-                key=f"m1_radio_{st.session_state.count_m1}"
                 st.rerun()
 
 # --- PHASE 2: MANEUVER ---
@@ -130,9 +131,9 @@ def training_module_2():
         st.progress(st.session_state.count_m2 / 2)
 
         if st.session_state.count_m2 == 0:
-            focus2 = "Focus strictly on the correct Stable Arch body position found in SOP-BODY-01."
+            focus2 = "Focus strictly on the Stable Arch position (The Banana) and exit procedures. DO NOT ask about steering or toggles yet."
         else:
-            focus2 = "Focus strictly on toggles & steering found in SOP-NAV-01."
+            focus2 = "Focus on landing patterns, altitude awareness during canopy flight, or the final flare. DO NOT ask about basic left/right turns."
 
         if st.button("Generate Jump Scenario") or st.session_state.quiz_active:
             st.session_state.quiz_active = True
@@ -140,9 +141,11 @@ def training_module_2():
                 # Focus prompt on Body Position and Flare
                 prompt = f"""
 Based ONLY on SECTION 2 of this SOP: {SOP_CONTENT}, {focus2},
-Generate one MCQ. 
-You MUST include the lettered answer options in the question.
-Output: QUESTION: [text] ANSWER_KEY: [Letter]
+STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factually correct according to the SOP.
+            The other three options must be definitively WRONG based on the text. 
+            Avoid "All of the above" or "None of the above" scenarios.
+            You MUST include the lettered answer options in the question.
+            Output: QUESTION: [text] ANSWER_KEY: [Letter]
 """
                 raw_response = model.generate_content(prompt).text
                 st.session_state.current_question_text = raw_response.split("ANSWER_KEY:")[0]
@@ -173,7 +176,6 @@ Output: QUESTION: [text] ANSWER_KEY: [Letter]
                     time.sleep(2)
                     st.session_state.count_m2 = 0
                     del st.session_state.current_question_text
-                    key=f"m2_radio_{st.session_state.count_m2}"
                     st.rerun()
 
 # --- PHASE 3: SURVIVAL ---
@@ -198,9 +200,11 @@ def training_module_3():
                 # Focus prompt on SOP-CRIS (Emergency procedures)
                 prompt = f"""
 Based ONLY on SECTION 3 of this SOP: {SOP_CONTENT}, {focus3}
-Generate one MCQ. 
-You MUST include the lettered answer options in the question.
-Output: QUESTION: [text] ANSWER_KEY: [Letter]
+STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factually correct according to the SOP.
+            The other three options must be definitively WRONG based on the text. 
+            Avoid "All of the above" or "None of the above" scenarios.
+            You MUST include the lettered answer options in the question.
+            Output: QUESTION: [text] ANSWER_KEY: [Letter]
 """
                 raw_response = model.generate_content(prompt).text
                 st.session_state.current_question_text = raw_response.split("ANSWER_KEY:")[0]
@@ -231,7 +235,6 @@ Output: QUESTION: [text] ANSWER_KEY: [Letter]
                     time.sleep(2)
                     st.session_state.count_m3 = 0
                     del st.session_state.current_question_text
-                    key=f"m3_radio_{st.session_state.count_m3}"
                     st.rerun()
 
 def active_mentor():
