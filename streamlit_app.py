@@ -109,7 +109,7 @@ def training_module_2():
                 prompt = f"""
 Based ONLY on the SECTION 2: THE JUMP & MANEUVERS (SKILLS PHASE) section of this SOP: {SOP_CONTENT}
 Generate one MCQ. 
-STRICT RULE: Focus ONLY on body position (banana), steering, and landing flares.
+STRICT RULE: Focus ONLY on body position (banana), or steering, or landing flares.
 Do NOT ask about emergency procedures or malfunction heights. You MUST include the lettered answer options in the question.
 Output: QUESTION: [text] ANSWER_KEY: [Letter]
 """
@@ -181,8 +181,8 @@ Output: QUESTION: [text] ANSWER_KEY: [Letter]
                         del st.session_state.current_question_text 
                         # 2. Add a pause so they see the balloons and success message
                         time.sleep(3) 
-                        # 3. Force a rerun to update the sidebar navigation immediately
-                        st.rerun()
+                        # 3. Jump to grad page
+                        st.switch_page(st.Page(graduation_screen))
                     else:
                         st.toast("Cool under pressure! One more.", icon="✅")
                         del st.session_state.current_question_text
