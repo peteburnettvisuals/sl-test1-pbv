@@ -68,7 +68,15 @@ def welcome_home():
 # --- PHASE 1: EQUIPMENT ---
 def training_module_1():
     st.title("🛠️ Phase 1: Equipment & Pre-Flight")
-    st.video("https://www.youtube.com/watch?v=nC6D6NHjccI")
+    st.video("https://www.youtube.com/watch?v=74DSBbwm_UY")
+
+    st.markdown("""
+    ### First, watch the training video above. 
+    There is a small amount of information to take in, so we have highlighted the important bit with friendly arrows!
+    
+    ### Then, try the assessment below.
+    You'll need to get 2 right answers in a row to pass this section. All of the questions are generated uniquely for each user, to make sure that the assessment is accurate!  
+    """)
     
     st.write(f"**Mastery Level:** {st.session_state.count_m1} / 2 Correct")
     st.progress(st.session_state.count_m1 / 2)
