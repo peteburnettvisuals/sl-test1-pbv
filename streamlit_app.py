@@ -72,7 +72,7 @@ def training_module_1():
 
     st.markdown("""
     ### First, watch the training video above. 
-    There is a small amount of information to take in, so we have highlighted the important bit with friendly arrows!
+    There is a small amount of information to take in, so we have highlighted the important bits with friendly arrows!
     
     ### Then, try the assessment below.
     You'll need to get 2 right answers in a row to pass this section. All of the questions are generated uniquely for each user, to make sure that the assessment is accurate!  
@@ -136,7 +136,15 @@ def training_module_2():
         st.warning("🔒 Complete Phase 1 to unlock this module.")
     else:
         st.title("🍌 Phase 2: The Jump & Maneuvers")
-        st.video("https://www.youtube.com/watch?v=ynNAC9a57ss")
+        st.video("https://www.youtube.com/watch?v=iQcRGqhIbLo")
+
+        st.markdown("""
+        ### Like before, watch the training video above. 
+        Shorter and easier one this time!
+    
+        ### Then, try the assessment below.
+        You'll need to get 2 right answers in a row to pass this section. Can you do it first go?  
+        """)
         
         st.write(f"**Mastery Level:** {st.session_state.count_m2} / 2 Correct")
         st.progress(st.session_state.count_m2 / 2)
