@@ -1,5 +1,6 @@
 import streamlit as st
 import vertexai
+import time
 from vertexai.generative_models import GenerativeModel
 from google.oauth2 import service_account
 if "count_m1" not in st.session_state:
@@ -85,6 +86,7 @@ Output: QUESTION: [text] ANSWER_KEY: [Letter]
                     st.rerun()
             else:
                 st.error("❌ Incorrect. Gear safety is binary. Progress reset.")
+                time.sleep(2)
                 st.session_state.count_m1 = 0
                 del st.session_state.current_question_text
                 st.rerun()
@@ -133,6 +135,7 @@ Output: QUESTION: [text] ANSWER_KEY: [Letter]
                         st.rerun()
                 else:
                     st.error("❌ Incorrect. Precision in the air is vital. Progress reset.")
+                    time.sleep(2)
                     st.session_state.count_m2 = 0
                     del st.session_state.current_question_text
                     st.rerun()
@@ -181,6 +184,7 @@ Output: QUESTION: [text] ANSWER_KEY: [Letter]
                         st.rerun()
                 else:
                     st.error("❌ Incorrect. In a crisis, there is no room for error. Progress reset.")
+                    time.sleep(2)
                     st.session_state.count_m3 = 0
                     del st.session_state.current_question_text
                     st.rerun()
