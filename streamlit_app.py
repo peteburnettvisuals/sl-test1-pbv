@@ -49,6 +49,9 @@ if "quiz_active" not in st.session_state:
 
 def welcome_home():
     st.title("🪂 Welcome to SkyHigh AI Training")
+
+    st.video("https://vimeo.com/1149354703")
+
     st.markdown("""
     ### Purpose of this Demo
     This tech demo from Pete Burnett Visuals uses **Gemini 2.0 Flash** to ensure every jumper is 100% prepared for the skies. 
