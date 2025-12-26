@@ -333,7 +333,9 @@ def graduation_screen():
 
 # --- 4. SIDEBAR NAVIGATION ---
 
-
+with st.sidebar:
+    st.image("TECHDEMO.png", use_container_width=True)
+    st.markdown("---") # Optional: adds a nice separator line under the logo
 # 1. Start with the pages everyone can see
 pages = {
     "Start Here": [st.Page(welcome_home, title="Welcome", icon="🏠")],
@@ -353,7 +355,6 @@ if st.session_state.training_step > 3:
     pages["Operations"] = [st.Page(active_mentor, title="Live Jump Mentor", icon="🛩️")]
 
 # 3. Finalize Navigation
-st.logo("TECHDEMO.png")
 pg = st.navigation(pages)
 
 # --- 5. SIDEBAR UTILITIES ---
