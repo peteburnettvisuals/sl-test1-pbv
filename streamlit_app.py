@@ -122,10 +122,10 @@ def welcome_home():
     st.markdown("""
     ### FAQ
     1. **What platform is this built on?**: This is a custom-designed platform built inhouse by the Pete Burnett Visuals team. This means we can adapt and expand it for all clients and applications.
-    2. **What AI system is used?**: The engine behind the system is Google's Gemini system. (2.0 Flash)
-    3. **Who created the videos?**: The videos were also created inhouse, specifically for the purposes of this demo?
+    2. **What AI system is used?**: The engine behind the system is Google's Gemini system. (2.0 Flash) We use a technique called RAG to ensure it stays focussed on the textbook.
+    3. **Who created the videos?**: The videos were also created inhouse, specifically for the purposes of this demo.
     4. **Is SkyHigh a real company?**: No - they are ficitious, created by us for the purposes of this demo.
-    5. **How do I get in touch?**: You can contact us via our website at https://www.peteburnettvisuials.com.
+    5. **How do I get in touch?**: You can contact us via our website at https://www.peteburnettvisuals.com.
               
     """)
 
