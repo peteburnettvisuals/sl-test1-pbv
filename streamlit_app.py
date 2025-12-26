@@ -1,5 +1,17 @@
 import streamlit as st
 
+st.set_page_config(
+    page_title="SkyHigh AI Training",
+    page_icon="🪂", 
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={
+        'Get Help': None,
+        'Report a bug': None,
+        'About': "### SkyHigh AI Training Tech Demo\nCreated by Pete Burnett Visuals using Gemini 2.0 Flash."
+    }
+)
+
 # --- BRANDING & STYLING ---
 st.set_page_config(page_title="SkyHigh AI Training", page_icon="🪂")
 
@@ -87,9 +99,14 @@ def welcome_home():
 
     st.markdown("""
     ### Purpose of this Demo
-    This tech demo from Pete Burnett Visuals uses **Gemini 2.0 Flash** to ensure every jumper is 100% prepared for the skies. 
-    Unlike static tests, our AI instructor generates dynamic scenarios, with all questions and responses based solely on real SOPs.
-    
+    This tech demo showcases AI being used for two key aspects of training - initial education, and ongoing mentor-style support.
+                
+    There are 3 very short modules, with a quick assessment at the end of each one. The AI system creates dynamic questions, unique for each user, and marks them accordingly.
+                
+    Completing the assessments unlocks a live AI-powered mentor, which can then be used by students to answer questions and refresh their knowledge moving forwards.
+                
+    In both cases, the AI system sticks rigourously to the textbook - in this case a Standard Operating Procedure (SOP) Manual we have generated. This avoids hallucinations and ensures that the student is taught ONLY what is true and verified. 
+                
     ### How it Works
     1. **Mastery Modules**: You must pass 3 phases (PreFlight, Jump, and Crisis).
     2. **The 2/2 Rule**: You must answer two consecutive questions correctly to progress.
@@ -100,6 +117,20 @@ def welcome_home():
     """)
     if st.button("Begin Training"):
         st.switch_page(st.Page(training_module_1))
+
+    
+    st.markdown("""
+    ### FAQ
+    1. **What platform is this built on?**: This is a custom-designed platform built inhouse by the Pete Burnett Visuals team. This means we can adapt and expand it for all clients and applications.
+    2. **What AI system is used?**: The engine behind the system is Google's Gemini system. (2.0 Flash)
+    3. **Who created the videos?**: The videos were also created inhouse, specifically for the purposes of this demo?
+    4. **Is SkyHigh a real company?**: No - they are ficitious, created by us for the purposes of this demo.
+    5. **How do I get in touch?**: You can contact us via our website at https://www.peteburnettvisuials.com.
+              
+    """)
+
+
+
 
 # --- PHASE 1: EQUIPMENT ---
 def training_module_1():
