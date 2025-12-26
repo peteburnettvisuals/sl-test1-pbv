@@ -311,7 +311,7 @@ STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factua
                     st.rerun()
 
 def active_mentor():
-    st.title("🤖 Active Jump Mentor")
+    st.title("🤖 Live Jump Mentor")
     st.write("This is a live Q&A assistant for qualified SkyHigh graduates. All questions will be answered based exclusively on the SkyHigh SOP. This demo uses a system called RAG to ensure that all answers are correct and no AI hallucinations will be returned. Give it a go!")
     # Your existing Chatbot code (from previous version) fits here!
     user_input = st.chat_input("Ask a safety question...")
@@ -324,7 +324,7 @@ def graduation_screen():
     st.balloons()
     st.title("🎓 Certified SkyHigh Jumper")
     st.success("Congratulations! You have mastered all three phases of the SkyHigh SOP.")
-    st.write("You are now officially cleared to use the **Active Jump Mentor** for real-time mission support. You can find it in the sidebar menu, under Operations.")
+    st.write("You are now officially cleared to use the **Live Jump Mentor** for real-time mission support. You can find it in the sidebar menu, under Operations.")
     
     # Show a mock certificate
     st.info("CERTIFICATE ID: SH-2025-" + str(st.session_state.count_m1 + 99))
