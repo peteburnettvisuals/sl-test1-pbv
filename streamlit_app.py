@@ -61,6 +61,9 @@ def welcome_home():
     1. **Mastery Modules**: You must pass 3 phases (PreFlight, Jump, and Crisis).
     2. **The 2/2 Rule**: You must answer two consecutive questions correctly to progress.
     3. **Live Mentor**: Once graduated, you unlock a real-time safety assistant.
+                
+    ### Using a mobile?
+    There is a sidebar that you can open and close by clicking on the double arrows at the top left of the screen.            
     """)
     if st.button("Begin Training"):
         st.switch_page(st.Page(training_module_1))
@@ -82,7 +85,7 @@ def training_module_1():
     st.progress(st.session_state.count_m1 / 2)
 
     if st.session_state.count_m1 == 0:
-        focus1 = "Focus strictly on ONE of the WEATHER conditions mentioned in SOP-ENV-01."
+        focus1 = "Focus strictly on the cumulo-nimbus WEATHER condition mentioned in SOP-ENV-01."
     else:
         focus1 = "Focus strictly on HARNESS and ALTIMETER checks found in SOP-GEAR-02."
 
@@ -94,8 +97,8 @@ def training_module_1():
             prompt = f"""
 Based ONLY on SECTION 1 of this SOP: {SOP_CONTENT}, {focus1},
 STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factually correct according to the SOP.
-            The other three options must be definitively WRONG based on the text. 
-            Avoid "All of the above" or "None of the above" scenarios.
+            The other three options must be definitively WRONG based on the text, as the user will be answering with radio buttons and cannot mutiple select. 
+            Avoid "All of the above", "some of the above" or "None of the above" scenarios.
             You MUST include the lettered answer options in the question.
             Output: QUESTION: [text] ANSWER_KEY: [Letter] 
 """
@@ -171,7 +174,7 @@ def training_module_2():
                 prompt = f"""
 Based ONLY on SECTION 2 of this SOP: {SOP_CONTENT}, {focus2},
 STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factually correct according to the SOP.
-            The other three options must be definitively WRONG based on the text. 
+            The other three options must be definitively WRONG based on the text, as the user will be answering with radio buttons and cannot mutiple select. 
             Avoid "All of the above" or "None of the above" scenarios.
             You MUST include the lettered answer options in the question.
             Output: QUESTION: [text] ANSWER_KEY: [Letter]
@@ -238,7 +241,7 @@ def training_module_3():
                 prompt = f"""
 Based ONLY on SECTION 3 of this SOP: {SOP_CONTENT}, {focus3}
 STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factually correct according to the SOP.
-            The other three options must be definitively WRONG based on the text. 
+            The other three options must be definitively WRONG based on the text, as the user will be answering with radio buttons and cannot mutiple select. 
             Avoid "All of the above" or "None of the above" scenarios.
             You MUST include the lettered answer options in the question.
             Output: QUESTION: [text] ANSWER_KEY: [Letter]
@@ -276,7 +279,7 @@ STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factua
 
 def active_mentor():
     st.title("🤖 Active Jump Mentor")
-    st.write("This is a live Q&A assistant for qualified SkyHigh graduates. All questions will be answered based exclusively on the SkyHigh SOP. This demo uses a system called RAG to ensure that all answers are correct and no AI hallucinations will be returned.")
+    st.write("This is a live Q&A assistant for qualified SkyHigh graduates. All questions will be answered based exclusively on the SkyHigh SOP. This demo uses a system called RAG to ensure that all answers are correct and no AI hallucinations will be returned. Give it a go!")
     # Your existing Chatbot code (from previous version) fits here!
     user_input = st.chat_input("Ask a safety question...")
     if user_input:
@@ -288,7 +291,7 @@ def graduation_screen():
     st.balloons()
     st.title("🎓 Certified SkyHigh Jumper")
     st.success("Congratulations! You have mastered all three phases of the SkyHigh SOP.")
-    st.write("You are now officially cleared to use the **Active Jump Mentor** for real-time mission support.")
+    st.write("You are now officially cleared to use the **Active Jump Mentor** for real-time mission support. You can find it in the sidebar menu, under Operations.")
     
     # Show a mock certificate
     st.info("CERTIFICATE ID: SH-2025-" + str(st.session_state.count_m1 + 99))
