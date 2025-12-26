@@ -67,7 +67,7 @@ def welcome_home():
 
 # --- PHASE 1: EQUIPMENT ---
 def training_module_1():
-    st.title("🛠️ Phase 1: Equipment & Pre-Flight")
+    st.title("Phase 1: Equipment & Pre-Flight")
     st.video("https://www.youtube.com/watch?v=74DSBbwm_UY")
 
     st.markdown("""
@@ -82,7 +82,7 @@ def training_module_1():
     st.progress(st.session_state.count_m1 / 2)
 
     if st.session_state.count_m1 == 0:
-        focus1 = "Focus strictly on WEATHER conditions found in SOP-ENV-01."
+        focus1 = "Focus strictly on ONE of the WEATHER conditions mentioned in SOP-ENV-01."
     else:
         focus1 = "Focus strictly on HARNESS and ALTIMETER checks found in SOP-GEAR-02."
 
@@ -135,7 +135,7 @@ def training_module_2():
     if st.session_state.training_step < 2:
         st.warning("🔒 Complete Phase 1 to unlock this module.")
     else:
-        st.title("🍌 Phase 2: The Jump & Maneuvers")
+        st.title("Phase 2: The Jump & Maneuvers")
         st.video("https://www.youtube.com/watch?v=iQcRGqhIbLo")
 
         st.markdown("""
@@ -212,8 +212,16 @@ def training_module_3():
     if st.session_state.training_step < 3:
         st.warning("🔒 Complete Phase 2 to unlock this module.")
     else:
-        st.title("🚨 Phase 3: Crisis Management")
-        st.video("https://www.youtube.com/watch?v=nC6D6NHjccI")
+        st.title("Phase 3: Crisis Management")
+        st.video("https://www.youtube.com/watch?v=3qDBFceGupU")
+
+        st.markdown("""
+        ### Last video on this course! 
+        Almost there!
+    
+        ### And then, your final assessment below.
+        You are just 2 correct answers away from one of the most pointless certifications you will ever get. But you do get balloons with it.
+        """)
         
         st.write(f"**Mastery Level:** {st.session_state.count_m3} / 2 Correct")
         st.progress(st.session_state.count_m3 / 2)
