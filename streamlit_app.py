@@ -333,7 +333,7 @@ def graduation_screen():
 
 # --- 4. SIDEBAR NAVIGATION ---
 
-st.sidebar.image("TECHDEMO.png", use_container_width=True)
+st.logo("TECHDEMO.png")
 # 1. Start with the pages everyone can see
 pages = {
     "Start Here": [st.Page(welcome_home, title="Welcome", icon="🏠")],
