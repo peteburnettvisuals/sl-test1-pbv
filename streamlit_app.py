@@ -103,7 +103,7 @@ def welcome_home():
 
 # --- PHASE 1: EQUIPMENT ---
 def training_module_1():
-    st.title("Phase 1: Equipment & Pre-Flight")
+    st.title("Section 1: Equipment & Pre-Flight")
     st.video("https://www.youtube.com/watch?v=74DSBbwm_UY")
 
     st.markdown("""
@@ -122,7 +122,7 @@ def training_module_1():
     else:
         focus1 = "Focus strictly on HARNESS and ALTIMETER checks found in SOP-GEAR-02."
 
-    if st.button("Generate Gear Scenario") or st.session_state.quiz_active:
+    if st.button("Start Section 1 Assessment") or st.session_state.quiz_active:
         st.session_state.quiz_active = True
         
         if "current_question_text" not in st.session_state:
@@ -142,7 +142,7 @@ STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factua
         st.info(st.session_state.current_question_text)
         user_choice = st.radio("Select answer:", ["A", "B", "C", "D"], index=None, key=f"m1_radio_{st.session_state.count_m1}")
         
-        if st.button("Submit Phase 1 Answer"):
+        if st.button("Submit Section 1 Answer"):
             if user_choice == st.session_state.correct_answer:
                 st.session_state.count_m1 += 1
                 if st.session_state.count_m1 >= 2:
@@ -169,9 +169,9 @@ STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factua
 # --- PHASE 2: MANEUVER ---
 def training_module_2():
     if st.session_state.training_step < 2:
-        st.warning("🔒 Complete Phase 1 to unlock this module.")
+        st.warning("🔒 Complete Section 1 to unlock this module.")
     else:
-        st.title("Phase 2: The Jump & Maneuvers")
+        st.title("Section 2: The Jump & Maneuvers")
         st.video("https://www.youtube.com/watch?v=iQcRGqhIbLo")
 
         st.markdown("""
@@ -200,7 +200,7 @@ def training_module_2():
             Focus on altitudes for the downwind or base leg.
             """
 
-        if st.button("Generate Jump Scenario") or st.session_state.quiz_active:
+        if st.button("Start Section 2 Assessment") or st.session_state.quiz_active:
             st.session_state.quiz_active = True
             if "current_question_text" not in st.session_state:
                 # Focus prompt on Body Position and Flare
@@ -219,7 +219,7 @@ STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factua
             st.info(st.session_state.current_question_text)
             user_choice = st.radio("Select answer:", ["A", "B", "C", "D"], index=None, key=f"m2_radio_{st.session_state.count_m2}")
             
-            if st.button("Submit Phase 2 Answer"):
+            if st.button("Submit Section 2 Answer"):
                 if user_choice == st.session_state.correct_answer:
                     st.session_state.count_m2 += 1
                     if st.session_state.count_m2 >= 2:
@@ -267,7 +267,7 @@ def training_module_3():
         else:
             focus3 = "Focus strictly on cut away procedure covered in SOP-CRIS-03."
 
-        if st.button("Generate Crisis Scenario") or st.session_state.quiz_active:
+        if st.button("Start Section 3 Assessment") or st.session_state.quiz_active:
             st.session_state.quiz_active = True
             if "current_question_text" not in st.session_state:
                 # Focus prompt on SOP-CRIS (Emergency procedures)
@@ -286,12 +286,12 @@ STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factua
             st.info(st.session_state.current_question_text)
             user_choice = st.radio("Select answer:", ["A", "B", "C", "D"], index=None, key=f"m3_radio_{st.session_state.count_m3}")
             
-            if st.button("Submit Phase 3 Answer"):
+            if st.button("Submit Section 3 Answer"):
                 if user_choice == st.session_state.correct_answer:
                     st.session_state.count_m3 += 1
                     if st.session_state.count_m3 >= 2:
                         st.balloons()
-                        st.success("🎯 Course Complete! You are now cleared for the Active Jump Mentor.")
+                        st.success("🎯 Course Complete! You are now cleared for the Live Jump Mentor.")
                         st.session_state.training_step = 4
                         st.session_state.quiz_active = False
                         del st.session_state.current_question_text 
@@ -310,7 +310,7 @@ STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factua
                     del st.session_state.current_question_text
                     st.rerun()
 
-def active_mentor():
+def live_mentor():
     st.title("🤖 Live Jump Mentor")
     st.write("This is a live Q&A assistant for qualified SkyHigh graduates. All questions will be answered based exclusively on the SkyHigh SOP. This demo uses a system called RAG to ensure that all answers are correct and no AI hallucinations will be returned. Give it a go!")
     # Your existing Chatbot code (from previous version) fits here!
@@ -352,7 +352,7 @@ if st.session_state.training_step > 3:
     pages["Training Hangar"].append(st.Page(graduation_screen, title="Graduation", icon="🎓"))
     
     # Create the Operations section from scratch
-    pages["Operations"] = [st.Page(active_mentor, title="Live Jump Mentor", icon="🛩️")]
+    pages["Operations"] = [st.Page(live_mentor, title="Live Jump Mentor", icon="🛩️")]
 
 # 3. Finalize Navigation
 pg = st.navigation(pages)
