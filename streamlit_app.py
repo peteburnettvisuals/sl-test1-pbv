@@ -1,4 +1,35 @@
 import streamlit as st
+
+# --- BRANDING & STYLING ---
+st.set_page_config(page_title="SkyHigh AI Training", page_icon="🪂")
+
+st.markdown("""
+    <style>
+        /* 1. Page Background Gradient */
+        .stApp {
+            background: linear-gradient(180deg, #ffffff 0%, #e8f1f8 100%);
+        }
+
+        /* 2. Sidebar Logo Placement & Sidebar Font Size */
+        [data-testid="stSidebarNav"] span {
+            font-size: 1.1rem !important;
+            font-weight: 500 !important;
+        }
+        
+        /* Sidebar Group Headers (e.g., 'Training Hangar') */
+        [data-testid="sidebar-nav-item-group"] {
+            font-size: 1.2rem !important;
+            color: #d32f2f !important; /* SkyHigh Red */
+            font-weight: bold !important;
+        }
+
+        /* 3. Custom Radio Button Text Size */
+        .stRadio label {
+            font-size: 1.1rem !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 import vertexai
 import time
 from vertexai.generative_models import GenerativeModel
@@ -9,6 +40,8 @@ if "count_m2" not in st.session_state:
     st.session_state.count_m2 = 0
 if "count_m3" not in st.session_state:
     st.session_state.count_m3 = 0
+
+
 
 # --- 1. INITIALIZATION & AUTH ---
 # This part stays common to all sections
@@ -299,6 +332,8 @@ def graduation_screen():
 
 
 # --- 4. SIDEBAR NAVIGATION ---
+
+st.sidebar.image("TECHDEMO.png", use_container_width=True)
 # 1. Start with the pages everyone can see
 pages = {
     "Start Here": [st.Page(welcome_home, title="Welcome", icon="🏠")],
