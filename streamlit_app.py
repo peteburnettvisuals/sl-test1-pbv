@@ -324,7 +324,7 @@ def graduation_screen():
     st.balloons()
     st.title("🎓 Certified SkyHigh Jumper")
     st.success("Congratulations! You have mastered all three phases of the SkyHigh SOP.")
-    st.write("You are now officially cleared to use the **Live Jump Mentor** for real-time mission support. You can find it in the sidebar menu, under Operations.")
+    st.write("You are now officially cleared to use the **Live Jump Mentor** for real-time mission support. You can find it in the sidebar menu, under Operations. (If you are on a mobile, remember to use the double arrows top left to access the sidebar.)")
     
     # Show a mock certificate
     st.info("CERTIFICATE ID: SH-2025-" + str(st.session_state.count_m1 + 99))
