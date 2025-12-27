@@ -205,6 +205,7 @@ def welcome_home():
 # --- PHASE 1: EQUIPMENT ---
 def training_module_1():
     st.title("Section 1: Equipment & Pre-Flight")
+    st.write(f"Ready for takeoff, {st.session_state.user_name}?")
     st.video("https://www.youtube.com/watch?v=74DSBbwm_UY")
 
     st.markdown("""
@@ -476,3 +477,17 @@ with st.sidebar:
         st.rerun()
 
 pg.run()
+
+# --- NAVIGATION ROUTING ---
+# This looks at the session state and decides which function to run
+if "current_step" not in st.session_state:
+    welcome_home()
+elif st.session_state.current_step == 1:
+    # If they are at step 1, show the first module
+    training_module_1() 
+elif st.session_state.current_step == 2:
+    training_module_2()
+elif st.session_state.current_step == 3:
+    training_module_3()
+else:
+    graduation_screen()
