@@ -431,7 +431,8 @@ def graduation_screen():
     st.info("CERTIFICATE ID: SH-2025-" + str(st.session_state.count_m1 + 99))
 
 # --- 4. SIDEBAR NAVIGATION ---
-# 1. PRE-DEFINE ALL PAGE OBJECTS (Identity remains constant)
+
+# 1. Define the Page Instances FIRST
 welcome_p = st.Page(welcome_home, title="Welcome", icon="🏠")
 m1_p = st.Page(training_module_1, title="1. Pre-Flight", icon="🛠️")
 m2_p = st.Page(training_module_2, title="2. The Jump", icon="🍌")
@@ -439,49 +440,48 @@ m3_p = st.Page(training_module_3, title="3. Crisis Mgmt", icon="🚨")
 grad_p = st.Page(graduation_screen, title="Graduation", icon="🎓")
 mentor_p = st.Page(live_mentor, title="Live Jump Mentor", icon="🛩️")
 
-# 2. Set the default target
-target_p = welcome_p 
+# 2. Get current state safely
+current_s = st.session_state.get("training_step", 1)
 
-# 3. BUILD DYNAMIC PAGES DICTIONARY
+# 3. Build the Pages Dictionary
 pages = {
     "Start Here": [welcome_p],
     "Training Hangar": [m1_p, m2_p, m3_p]
 }
 
-# 4. GET CURRENT PROGRESS
-current_s = st.session_state.get("training_step", 1)
-
-# Add conditional pages ONLY if they have passed Phase 3
+# 4. Add Conditional Pages
 if current_s > 3:
     pages["Training Hangar"].append(grad_p)
     pages["Operations"] = [mentor_p]
 
-# 5. ASSIGN TARGET PAGE BASED ON LOGGED-IN STATUS
+# 5. DETERMINE THE JUMP TARGET
+# Default is welcome
+target_p = welcome_p
+
+# If they are "logged in", pick their module
 if "user_email" in st.session_state:
     if current_s == 1: target_p = m1_p
     elif current_s == 2: target_p = m2_p
     elif current_s == 3: target_p = m3_p
-    elif current_s == 4: target_p = grad_p
+    elif current_s >= 4: target_p = grad_p
 
-# 6. EXECUTE NAVIGATION
-# default_page MUST be an exact object already inside 'pages'
+# 6. INITIALIZE NAVIGATION (This defines the app structure)
 pg = st.navigation(pages, position="sidebar", default_page=target_p)
 
-# --- 5. SIDEBAR UTILITIES ---
+# 7. SIDEBAR UTILITIES (Optional UI elements)
 with st.sidebar:
     st.image("TECHDEMO.png", width='stretch')
     st.markdown("---")
-    st.write(f"**Current Progress:** You are at stage {current_s} of 4")
+    st.write(f"**Current Progress:** Stage {current_s} of 4")
     
     if st.button("Reset Tech Demo"):
-        st.session_state.training_step = 1
-        st.session_state.count_m1 = 0
-        st.session_state.count_m2 = 0
-        st.session_state.count_m3 = 0
-        for key in ["user_email", "user_name", "current_question_text", "correct_answer"]:
+        # Reset all progress markers and keys
+        keys_to_reset = ["training_step", "count_m1", "count_m2", "count_m3", 
+                         "user_email", "user_name", "current_question_text", "correct_answer"]
+        for key in keys_to_reset:
             if key in st.session_state:
                 del st.session_state[key]
         st.rerun()
 
-# This is the only place pg.run() should be called
+# 8. THE FINAL COMMAND (Must be outside the sidebar block)
 pg.run()
