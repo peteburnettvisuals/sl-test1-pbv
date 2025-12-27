@@ -447,23 +447,27 @@ pages = {
     ]
 }
 
+# Set safe Logic
+target_page = pages["Start Here"][0]
+
 # 2. Add Graduation AND Operations only if they passed Phase 3
 if st.session_state.training_step > 3:
     pages["Training Hangar"].append(st.Page(graduation_screen, title="Graduation", icon="🎓"))
     pages["Operations"] = [st.Page(live_mentor, title="Live Jump Mentor", icon="🛩️")]
 
-# 3. SET THE TARGET PAGE (The "Jump" Logic)
-if "user_email" not in st.session_state:
-    target_page = pages["Start Here"][0]
-else:
-    if st.session_state.training_step == 4:
-        target_page = pages["Training Hangar"][3] # Graduation
-    else:
-        # Step 1 -> Index 0, Step 2 -> Index 1, etc.
-        target_page = pages["Training Hangar"][st.session_state.training_step - 1]
+# 2. SET THE TARGET PAGE (The "Jump" Logic)
+if "user_email" in st.session_state:
+    try:
+        if st.session_state.training_step == 4:
+            target_page = pages["Training Hangar"][3] # Graduation
+        else:
+            # Map Step 1->0, 2->1, 3->2
+            target_page = pages["Training Hangar"][st.session_state.training_step - 1]
+    except Exception:
+        # If the step is out of bounds, fall back to Welcome
+        target_page = pages["Start Here"][0]
 
-# 4. Initialize Navigation AND pass the target_page as the 'default_page'
-# This is the "missing link" that tells the app where to jump
+# 3. Pass the guaranteed variable into st.navigation
 pg = st.navigation(pages, position="sidebar", default_page=target_page)
 
 # --- 5. SIDEBAR UTILITIES ---
