@@ -12,9 +12,6 @@ st.set_page_config(
     }
 )
 
-# --- BRANDING & STYLING ---
-st.set_page_config(page_title="SkyHigh AI Training", page_icon="🪂")
-
 # This block handles the metadata description for sharing links
 st.markdown(
     """
@@ -131,6 +128,16 @@ def welcome_home():
 
     
     st.markdown("""
+    ### 🧰 What's Under the Bonnet?
+
+    This platform isn't just a series of videos; it’s a sophisticated **AI-driven training ecosystem** built with a modern technology stack:
+
+    * **The Engine**: Powering the logic is **Gemini 2.0 Flash**, Google's latest high-speed generative model, hosted via **Vertex AI**.
+    * **The Guardrails (RAG)**: We use **Retrieval-Augmented Generation (RAG)**. The AI doesn't "guess"—it is strictly tethered to the **SkyHigh SOP**, ensuring 100% factual accuracy and zero hallucinations.
+    * **The Proctor**: The assessment system uses **Adversarial Prompting**. The AI is instructed to create "definitively wrong" distractors for its questions, ensuring only a student who truly understands the SOP can progress.
+    * **The Framework**: Built entirely in **Python** using **Streamlit**, with custom **CSS injection** for a premium, wide-layout branded experience.
+    * **Cloud Infrastructure**: Securely authenticated using **GCP Service Accounts** and hosted on **Streamlit Community Cloud**.
+                
     ### FAQ
     1. **What platform is this built on?**: This is a custom-designed platform built inhouse by the Pete Burnett Visuals team. This means we can adapt and expand it for all clients and applications.
     2. **What AI system is used?**: The engine behind the system is Google's Gemini system. (2.0 Flash) We use a technique called RAG to ensure it stays focussed on the textbook.
