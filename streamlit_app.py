@@ -437,7 +437,7 @@ with st.sidebar:
     st.image("TECHDEMO.png", width='stretch')
     st.markdown("---") 
 
-# 1. Define the dynamic pages dictionary
+# 1. Define your pages
 pages = {
     "Start Here": [st.Page(welcome_home, title="Welcome", icon="🏠")],
     "Training Hangar": [
@@ -447,27 +447,32 @@ pages = {
     ]
 }
 
-# Set safe Logic
-target_page = pages["Start Here"][0]
-
-# 2. Add Graduation AND Operations only if they passed Phase 3
-if st.session_state.training_step > 3:
+# Add conditional pages
+if st.session_state.get("training_step", 1) > 3:
     pages["Training Hangar"].append(st.Page(graduation_screen, title="Graduation", icon="🎓"))
     pages["Operations"] = [st.Page(live_mentor, title="Live Jump Mentor", icon="🛩️")]
 
 # 2. SET THE TARGET PAGE (The "Jump" Logic)
+# Establish a safe default first
+target_page = pages["Start Here"][0]
+
+# Only attempt to jump if the user has an email in session state
 if "user_email" in st.session_state:
+    current_step = st.session_state.get("training_step", 1)
+    
     try:
-        if st.session_state.training_step == 4:
+        if current_step == 4:
             target_page = pages["Training Hangar"][3] # Graduation
         else:
-            # Map Step 1->0, 2->1, 3->2
-            target_page = pages["Training Hangar"][st.session_state.training_step - 1]
-    except Exception:
-        # If the step is out of bounds, fall back to Welcome
+            # Safely grab the page from the list based on the step (1-3)
+            # We use min/max to ensure it stays within the list index (0-2)
+            idx = max(0, min(current_step - 1, 2))
+            target_page = pages["Training Hangar"][idx]
+    except (IndexError, KeyError):
+        # Fallback if anything goes wrong with the list logic
         target_page = pages["Start Here"][0]
 
-# 3. Pass the guaranteed variable into st.navigation
+# 3. Finalize Navigation with the guaranteed target_page
 pg = st.navigation(pages, position="sidebar", default_page=target_page)
 
 # --- 5. SIDEBAR UTILITIES ---
