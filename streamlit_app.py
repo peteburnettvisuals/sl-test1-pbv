@@ -1,4 +1,11 @@
 import streamlit as st
+from supabase import create_client, Client
+
+
+# --- SUPABASE INIT ---
+url: str = st.secrets["SUPABASE_URL"]
+key: str = st.secrets["SUPABASE_KEY"]
+supabase: Client = create_client(url, key)
 
 st.set_page_config(
     page_title="SkyHigh AI Training",
@@ -123,8 +130,30 @@ def welcome_home():
     ### Using a mobile?
     There is a sidebar that you can open and close by clicking on the double arrows at the top left of the screen.            
     """)
+    # --- LEAD CAPTURE SECTION ---
+    st.markdown("### 👋 Let's get started")
+    user_name = st.text_input("Enter your Full Name")
+    user_email = st.text_input("Enter your Email Address")
+
     if st.button("Begin Training"):
-        st.switch_page(st.Page(training_module_1))
+        if user_name and user_email:
+            # 1. Sync to Supabase (Project Prefix: skyhigh_users)
+            data = {
+                "full_name": user_name,
+                "email": user_email,
+                "training_step": 1
+            }
+            # 'upsert' will update existing users or insert new ones
+            supabase.table("skyhigh_users").upsert(data).execute()
+            
+            # 2. Store in session state for current use
+            st.session_state.user_name = user_name
+            st.session_state.user_email = user_email
+            
+            # 3. Move to Phase 1
+            st.switch_page(st.Page(training_module_1))
+        else:
+            st.warning("Please enter your name and email to continue.")
 
     
     st.markdown("""
@@ -383,7 +412,7 @@ def graduation_screen():
 # --- 4. SIDEBAR NAVIGATION ---
 
 with st.sidebar:
-    st.image("TECHDEMO.png", use_container_width=True)
+    st.image("TECHDEMO.png", width='stretch')
     st.markdown("---") # Optional: adds a nice separator line under the logo
 # 1. Start with the pages everyone can see
 pages = {
