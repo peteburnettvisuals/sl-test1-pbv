@@ -148,11 +148,11 @@ def welcome_home():
 
         if st.button("Begin / Resume Training"):
             if user_name and user_email:
-            # 1. First, check if the user already exists to get their current step
+                # 1. Fetch the user from Supabase
                 response = supabase.table("skyhigh_users").select("training_step").eq("email", user_email).execute()
                 
-                if response.data:
-                    # Returning User: Fetch their saved progress
+                if response.data and len(response.data) > 0:
+                    # ✅ FIXED: Use the actual number from the database!
                     current_step = response.data[0]["training_step"]
                     st.success(f"Welcome back, {user_name}! Resuming at Stage {current_step}.")
                 else:
@@ -160,7 +160,7 @@ def welcome_home():
                     current_step = 1
                     st.success(f"Welcome to SkyHigh, {user_name}! Starting your journey.")
 
-                # 2. Perform the Upsert to ensure Name is updated or record is created
+                # 2. Perform the Upsert (updates name if it changed, keeps step same)
                 data = {
                     "full_name": user_name,
                     "email": user_email,
@@ -168,12 +168,11 @@ def welcome_home():
                 }
                 supabase.table("skyhigh_users").upsert(data, on_conflict="email").execute()
 
-                # 3. Store in session state and "Jump"
+                # 3. Store in session state for the router to see
                 st.session_state.user_name = user_name
                 st.session_state.user_email = user_email
-                st.session_state.current_step = current_step
+                st.session_state.training_step = current_step # Use the synced variable
                 
-                # Trigger the balloons and a rerun to move to the correct page
                 st.balloons()
                 st.rerun()
         else:
