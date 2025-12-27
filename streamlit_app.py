@@ -434,11 +434,11 @@ def graduation_screen():
 
 
 # --- 4. SIDEBAR NAVIGATION ---
-
 with st.sidebar:
     st.image("TECHDEMO.png", width='stretch')
-    st.markdown("---") # Optional: adds a nice separator line under the logo
-# 1. Start with the pages everyone can see
+    st.markdown("---") 
+
+# 1. Define the dynamic pages dictionary
 pages = {
     "Start Here": [st.Page(welcome_home, title="Welcome", icon="🏠")],
     "Training Hangar": [
@@ -450,44 +450,38 @@ pages = {
 
 # 2. Add Graduation AND Operations only if they passed Phase 3
 if st.session_state.training_step > 3:
-    # Add Graduation to the Training Hangar list
     pages["Training Hangar"].append(st.Page(graduation_screen, title="Graduation", icon="🎓"))
-    
-    # Create the Operations section from scratch
     pages["Operations"] = [st.Page(live_mentor, title="Live Jump Mentor", icon="🛩️")]
 
-# 3. Finalize Navigation
-pg = st.navigation(pages)
+# 3. SET THE TARGET PAGE (The "Jump" Logic)
+# This uses the training_step from session state to decide which page to show on rerun
+if "user_email" not in st.session_state:
+    initial_page = pages["Start Here"][0]
+else:
+    if st.session_state.training_step == 4:
+        initial_page = pages["Training Hangar"][3] # Graduation
+    else:
+        # Step 1 -> Index 0, Step 2 -> Index 1, etc.
+        initial_page = pages["Training Hangar"][st.session_state.training_step - 1]
+
+# 4. Initialize and RUN Navigation
+pg = st.navigation(pages, position="sidebar")
 
 # --- 5. SIDEBAR UTILITIES ---
 with st.sidebar:
     st.write(f"**Current Progress:** You are at stage {st.session_state.training_step} of 4")
     if st.button("Reset Tech Demo"):
+        # Reset all progress markers
         st.session_state.training_step = 1
         st.session_state.count_m1 = 0
         st.session_state.count_m2 = 0
         st.session_state.count_m3 = 0
-
-        # CLEAR THE AI CACHE
-        # This removes the "Current Question" so the next one is truly fresh
-        if "current_question_text" in st.session_state:
-            del st.session_state.current_question_text
-        if "correct_answer" in st.session_state:
-            del st.session_state.correct_answer
+        
+        # Clear specific session state keys to ensure a fresh start
+        for key in ["user_email", "user_name", "current_question_text", "correct_answer"]:
+            if key in st.session_state:
+                del st.session_state[key]
         st.rerun()
 
+# This is the ONLY place pg.run() should be called
 pg.run()
-
-# --- NAVIGATION ROUTING ---
-# This looks at the session state and decides which function to run
-if "current_step" not in st.session_state:
-    welcome_home()
-elif st.session_state.current_step == 1:
-    # If they are at step 1, show the first module
-    training_module_1() 
-elif st.session_state.current_step == 2:
-    training_module_2()
-elif st.session_state.current_step == 3:
-    training_module_3()
-else:
-    graduation_screen()
