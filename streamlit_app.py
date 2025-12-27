@@ -15,6 +15,17 @@ st.set_page_config(
 # --- BRANDING & STYLING ---
 st.set_page_config(page_title="SkyHigh AI Training", page_icon="🪂")
 
+# This block handles the metadata description for sharing links
+st.markdown(
+    """
+    <head>
+        <meta property="og:description" content="Next-Gen AI Training & Mentoring Demo from Pete Burnett Visuals." />
+        <meta name="description" content="Next-Gen AI Training & Mentoring Demo from Pete Burnett Visuals." />
+    </head>
+    """,
+    unsafe_allow_html=True
+)
+
 st.markdown("""
     <style>
         /* 1. Page Background Gradient */
