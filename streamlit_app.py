@@ -437,18 +437,19 @@ with st.sidebar:
     st.image("TECHDEMO.png", width='stretch')
     st.markdown("---") 
 
-# 1. Define base pages
+# 1. Define ALL page objects first so they can be referenced easily
 welcome_page = st.Page(welcome_home, title="Welcome", icon="🏠")
 m1_page = st.Page(training_module_1, title="1. Pre-Flight", icon="🛠️")
 m2_page = st.Page(training_module_2, title="2. The Jump", icon="🍌")
 m3_page = st.Page(training_module_3, title="3. Crisis Mgmt", icon="🚨")
 
+# 2. Build the pages dictionary
 pages = {
     "Start Here": [welcome_page],
     "Training Hangar": [m1_page, m2_page, m3_page]
 }
 
-# 2. Add Conditional Pages based on training_step
+# 3. Add conditional pages based on training_step
 step = st.session_state.get("training_step", 1)
 
 if step > 3:
@@ -457,12 +458,11 @@ if step > 3:
     pages["Training Hangar"].append(grad_page)
     pages["Operations"] = [mentor_page]
 
-# 3. SET THE TARGET PAGE (The "Jump" Logic)
-# Initialize with Welcome as the guaranteed fallback
+# 4. SET THE TARGET PAGE (The "Jump" Logic)
+# Default to welcome_page if not logged in
 target_page = welcome_page
 
 if "user_email" in st.session_state:
-    # Map numeric steps to the specific page objects defined above
     if step == 1:
         target_page = m1_page
     elif step == 2:
@@ -470,22 +470,21 @@ if "user_email" in st.session_state:
     elif step == 3:
         target_page = m3_page
     elif step == 4:
-        target_page = grad_page
+        # Only use grad_page if it was actually created above
+        target_page = pages["Training Hangar"][-1] if step == 4 else welcome_page
 
-# 4. Initialize Navigation with the EXPLICIT default_page
+# 5. Initialize Navigation with the EXPLICIT default_page
 pg = st.navigation(pages, position="sidebar", default_page=target_page)
 
 # --- 5. SIDEBAR UTILITIES ---
 with st.sidebar:
-    st.write(f"**Current Progress:** You are at stage {st.session_state.training_step} of 4")
+    st.write(f"**Current Progress:** You are at stage {st.session_state.get('training_step', 1)} of 4")
     if st.button("Reset Tech Demo"):
-        # Reset all progress markers
+        # Reset all markers and clear specific session state keys
         st.session_state.training_step = 1
         st.session_state.count_m1 = 0
         st.session_state.count_m2 = 0
         st.session_state.count_m3 = 0
-        
-        # Clear specific session state keys to ensure a fresh start
         for key in ["user_email", "user_name", "current_question_text", "correct_answer"]:
             if key in st.session_state:
                 del st.session_state[key]
