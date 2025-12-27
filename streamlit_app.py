@@ -431,8 +431,7 @@ def graduation_screen():
     st.info("CERTIFICATE ID: SH-2025-" + str(st.session_state.count_m1 + 99))
 
 # --- 4. SIDEBAR NAVIGATION ---
-
-# 1. Define the Page Instances FIRST
+# 1. Define all page objects once
 welcome_p = st.Page(welcome_home, title="Welcome", icon="🏠")
 m1_p = st.Page(training_module_1, title="1. Pre-Flight", icon="🛠️")
 m2_p = st.Page(training_module_2, title="2. The Jump", icon="🍌")
@@ -440,48 +439,40 @@ m3_p = st.Page(training_module_3, title="3. Crisis Mgmt", icon="🚨")
 grad_p = st.Page(graduation_screen, title="Graduation", icon="🎓")
 mentor_p = st.Page(live_mentor, title="Live Jump Mentor", icon="🛩️")
 
-# 2. Get current state safely
+# 2. Safely check for progress
 current_s = st.session_state.get("training_step", 1)
 
-# 3. Build the Pages Dictionary
+# 3. Build the pages dictionary
 pages = {
     "Start Here": [welcome_p],
     "Training Hangar": [m1_p, m2_p, m3_p]
 }
 
-# 4. Add Conditional Pages
+# 4. Add Conditional Pages if step is high enough
 if current_s > 3:
     pages["Training Hangar"].append(grad_p)
     pages["Operations"] = [mentor_p]
 
-# 5. DETERMINE THE JUMP TARGET
-# Default is welcome
-target_p = welcome_p
+# 5. Simple Navigation - No 'default_page' jump logic for now
+pg = st.navigation(pages, position="sidebar")
 
-# If they are "logged in", pick their module
-if "user_email" in st.session_state:
-    if current_s == 1: target_p = m1_p
-    elif current_s == 2: target_p = m2_p
-    elif current_s == 3: target_p = m3_p
-    elif current_s >= 4: target_p = grad_p
-
-# 6. INITIALIZE NAVIGATION (This defines the app structure)
-pg = st.navigation(pages, position="sidebar", default_page=target_p)
-
-# 7. SIDEBAR UTILITIES (Optional UI elements)
+# --- 5. SIDEBAR UTILITIES ---
 with st.sidebar:
     st.image("TECHDEMO.png", width='stretch')
     st.markdown("---")
     st.write(f"**Current Progress:** Stage {current_s} of 4")
     
     if st.button("Reset Tech Demo"):
-        # Reset all progress markers and keys
-        keys_to_reset = ["training_step", "count_m1", "count_m2", "count_m3", 
-                         "user_email", "user_name", "current_question_text", "correct_answer"]
-        for key in keys_to_reset:
+        # Reset markers
+        st.session_state.training_step = 1
+        st.session_state.count_m1 = 0
+        st.session_state.count_m2 = 0
+        st.session_state.count_m3 = 0
+        # Clear identity
+        for key in ["user_email", "user_name", "current_question_text", "correct_answer"]:
             if key in st.session_state:
                 del st.session_state[key]
         st.rerun()
 
-# 8. THE FINAL COMMAND (Must be outside the sidebar block)
+# 6. Render the app
 pg.run()
