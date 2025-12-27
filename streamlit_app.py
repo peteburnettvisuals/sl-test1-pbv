@@ -148,35 +148,39 @@ def welcome_home():
 
         if st.button("Begin / Resume Training"):
             if user_name and user_email:
-                # 1. Fetch the user from Supabase
+                # 1. Fetch from Supabase
                 response = supabase.table("skyhigh_users").select("training_step").eq("email", user_email).execute()
                 
-                if response.data and len(response.data) > 0:
-                    # ✅ FIXED: Use the actual number from the database!
+                if response.data:
                     training_step = response.data[0]["training_step"]
                     st.success(f"Welcome back, {user_name}! Resuming at Stage {training_step}.")
                 else:
-                    # New User: Start at Step 1
                     training_step = 1
                     st.success(f"Welcome to SkyHigh, {user_name}! Starting your journey.")
 
-                # 2. Perform the Upsert (updates name if it changed, keeps step same)
-                data = {
-                    "full_name": user_name,
-                    "email": user_email,
-                    "training_step": training_step
-                }
-                supabase.table("skyhigh_users").upsert(data, on_conflict="email").execute()
-
-                # 3. Store in session state for the router to see
+                # 2. Sync session state
                 st.session_state.user_name = user_name
                 st.session_state.user_email = user_email
-                st.session_state.training_step = training_step # Use the synced variable
+                st.session_state.training_step = training_step
                 
+                # 3. Perform the database upsert
+                data = {"full_name": user_name, "email": user_email, "training_step": training_step}
+                supabase.table("skyhigh_users").upsert(data, on_conflict="email").execute()
+
                 st.balloons()
-                st.rerun()
-        else:
-            st.warning("Please enter your name and email to continue.")
+                time.sleep(1.5) # Give them a second to see the success message
+                
+                # 🚀 THE SAFE JUMP: Teleport based on the step
+                if training_step == 1:
+                    st.switch_page(m1_p)
+                elif training_step == 2:
+                    st.switch_page(m2_p)
+                elif training_step == 3:
+                    st.switch_page(m3_p)
+                elif training_step >= 4:
+                    st.switch_page(grad_p)
+            else:
+                st.warning("Please enter your name and email to continue.")
 
     
     st.markdown("""
