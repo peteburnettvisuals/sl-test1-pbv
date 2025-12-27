@@ -433,48 +433,40 @@ def graduation_screen():
 
 
 # --- 4. SIDEBAR NAVIGATION ---
-with st.sidebar:
-    st.image("TECHDEMO.png", width='stretch')
-    st.markdown("---") 
+# 1. PRE-DEFINE PAGE INSTANCES (Do this once at the top)
+welcome_p = st.Page(welcome_home, title="Welcome", icon="🏠")
+m1_p = st.Page(training_module_1, title="1. Pre-Flight", icon="🛠️")
+m2_p = st.Page(training_module_2, title="2. The Jump", icon="🍌")
+m3_p = st.Page(training_module_3, title="3. Crisis Mgmt", icon="🚨")
 
-# 1. Define ALL page objects first so they can be referenced easily
-welcome_page = st.Page(welcome_home, title="Welcome", icon="🏠")
-m1_page = st.Page(training_module_1, title="1. Pre-Flight", icon="🛠️")
-m2_page = st.Page(training_module_2, title="2. The Jump", icon="🍌")
-m3_page = st.Page(training_module_3, title="3. Crisis Mgmt", icon="🚨")
+# 2. INITIALIZE TARGET PAGE WITH FALLBACK
+target_p = welcome_p 
 
-# 2. Build the pages dictionary
+# 3. BUILD DYNAMIC PAGES DICTIONARY
 pages = {
-    "Start Here": [welcome_page],
-    "Training Hangar": [m1_page, m2_page, m3_page]
+    "Start Here": [welcome_p],
+    "Training Hangar": [m1_p, m2_p, m3_p]
 }
 
-# 3. Add conditional pages based on training_step
-step = st.session_state.get("training_step", 1)
+# 4. ADD GRADUATION/MENTOR IF QUALIFIED
+current_s = st.session_state.get("training_step", 1)
 
-if step > 3:
-    grad_page = st.Page(graduation_screen, title="Graduation", icon="🎓")
-    mentor_page = st.Page(live_mentor, title="Live Jump Mentor", icon="🛩️")
-    pages["Training Hangar"].append(grad_page)
-    pages["Operations"] = [mentor_page]
+if current_s > 3:
+    grad_p = st.Page(graduation_screen, title="Graduation", icon="🎓")
+    mentor_p = st.Page(live_mentor, title="Live Jump Mentor", icon="🛩️")
+    pages["Training Hangar"].append(grad_p)
+    pages["Operations"] = [mentor_p]
 
-# 4. SET THE TARGET PAGE (The "Jump" Logic)
-# Default to welcome_page if not logged in
-target_page = welcome_page
-
+# 5. ASSIGN TARGET PAGE BASED ON LOGGED-IN STATUS
 if "user_email" in st.session_state:
-    if step == 1:
-        target_page = m1_page
-    elif step == 2:
-        target_page = m2_page
-    elif step == 3:
-        target_page = m3_page
-    elif step == 4:
-        # Only use grad_page if it was actually created above
-        target_page = pages["Training Hangar"][-1] if step == 4 else welcome_page
+    if current_s == 1: target_p = m1_p
+    elif current_s == 2: target_p = m2_p
+    elif current_s == 3: target_p = m3_p
+    elif current_s == 4: target_p = grad_p
 
-# 5. Initialize Navigation with the EXPLICIT default_page
-pg = st.navigation(pages, position="sidebar", default_page=target_page)
+# 6. EXECUTE NAVIGATION (Line 477)
+# By using the pre-defined variables, target_p is guaranteed to be in 'pages'
+pg = st.navigation(pages, position="sidebar", default_page=target_p)
 
 # --- 5. SIDEBAR UTILITIES ---
 with st.sidebar:
