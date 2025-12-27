@@ -437,42 +437,42 @@ with st.sidebar:
     st.image("TECHDEMO.png", width='stretch')
     st.markdown("---") 
 
-# 1. Define your pages
+# 1. Define base pages
+welcome_page = st.Page(welcome_home, title="Welcome", icon="🏠")
+m1_page = st.Page(training_module_1, title="1. Pre-Flight", icon="🛠️")
+m2_page = st.Page(training_module_2, title="2. The Jump", icon="🍌")
+m3_page = st.Page(training_module_3, title="3. Crisis Mgmt", icon="🚨")
+
 pages = {
-    "Start Here": [st.Page(welcome_home, title="Welcome", icon="🏠")],
-    "Training Hangar": [
-        st.Page(training_module_1, title="1. Pre-Flight", icon="🛠️"),
-        st.Page(training_module_2, title="2. The Jump", icon="🍌"),
-        st.Page(training_module_3, title="3. Crisis Mgmt", icon="🚨"),
-    ]
+    "Start Here": [welcome_page],
+    "Training Hangar": [m1_page, m2_page, m3_page]
 }
 
-# Add conditional pages
-if st.session_state.get("training_step", 1) > 3:
-    pages["Training Hangar"].append(st.Page(graduation_screen, title="Graduation", icon="🎓"))
-    pages["Operations"] = [st.Page(live_mentor, title="Live Jump Mentor", icon="🛩️")]
+# 2. Add Conditional Pages based on training_step
+step = st.session_state.get("training_step", 1)
 
-# 2. SET THE TARGET PAGE (The "Jump" Logic)
-# Establish a safe default first
-target_page = pages["Start Here"][0]
+if step > 3:
+    grad_page = st.Page(graduation_screen, title="Graduation", icon="🎓")
+    mentor_page = st.Page(live_mentor, title="Live Jump Mentor", icon="🛩️")
+    pages["Training Hangar"].append(grad_page)
+    pages["Operations"] = [mentor_page]
 
-# Only attempt to jump if the user has an email in session state
+# 3. SET THE TARGET PAGE (The "Jump" Logic)
+# Initialize with Welcome as the guaranteed fallback
+target_page = welcome_page
+
 if "user_email" in st.session_state:
-    current_step = st.session_state.get("training_step", 1)
-    
-    try:
-        if current_step == 4:
-            target_page = pages["Training Hangar"][3] # Graduation
-        else:
-            # Safely grab the page from the list based on the step (1-3)
-            # We use min/max to ensure it stays within the list index (0-2)
-            idx = max(0, min(current_step - 1, 2))
-            target_page = pages["Training Hangar"][idx]
-    except (IndexError, KeyError):
-        # Fallback if anything goes wrong with the list logic
-        target_page = pages["Start Here"][0]
+    # Map numeric steps to the specific page objects defined above
+    if step == 1:
+        target_page = m1_page
+    elif step == 2:
+        target_page = m2_page
+    elif step == 3:
+        target_page = m3_page
+    elif step == 4:
+        target_page = grad_page
 
-# 3. Finalize Navigation with the guaranteed target_page
+# 4. Initialize Navigation with the EXPLICIT default_page
 pg = st.navigation(pages, position="sidebar", default_page=target_page)
 
 # --- 5. SIDEBAR UTILITIES ---
