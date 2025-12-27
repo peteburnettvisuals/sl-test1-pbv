@@ -132,8 +132,16 @@ def welcome_home():
     """)
     # --- LEAD CAPTURE SECTION ---
     st.markdown("### 👋 Let's get started")
-    user_name = st.text_input("Enter your Full Name")
-    user_email = st.text_input("Enter your Email Address")
+    st.markdown("""
+        <style>
+            input {
+                background-color: #ffffff !important;
+                border: 1px solid #d1d5db !important;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+    user_name = st.text_input("Enter your Full Name", max_chars=50)
+    user_email = st.text_input("Enter your Email Address", max_chars=50)
 
     if st.button("Begin Training"):
         if user_name and user_email:
