@@ -453,18 +453,18 @@ if st.session_state.training_step > 3:
     pages["Operations"] = [st.Page(live_mentor, title="Live Jump Mentor", icon="🛩️")]
 
 # 3. SET THE TARGET PAGE (The "Jump" Logic)
-# This uses the training_step from session state to decide which page to show on rerun
 if "user_email" not in st.session_state:
-    initial_page = pages["Start Here"][0]
+    target_page = pages["Start Here"][0]
 else:
     if st.session_state.training_step == 4:
-        initial_page = pages["Training Hangar"][3] # Graduation
+        target_page = pages["Training Hangar"][3] # Graduation
     else:
         # Step 1 -> Index 0, Step 2 -> Index 1, etc.
-        initial_page = pages["Training Hangar"][st.session_state.training_step - 1]
+        target_page = pages["Training Hangar"][st.session_state.training_step - 1]
 
-# 4. Initialize and RUN Navigation
-pg = st.navigation(pages, position="sidebar")
+# 4. Initialize Navigation AND pass the target_page as the 'default_page'
+# This is the "missing link" that tells the app where to jump
+pg = st.navigation(pages, position="sidebar", default_page=target_page)
 
 # --- 5. SIDEBAR UTILITIES ---
 with st.sidebar:
