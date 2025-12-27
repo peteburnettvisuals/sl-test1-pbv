@@ -431,41 +431,40 @@ def graduation_screen():
     st.info("CERTIFICATE ID: SH-2025-" + str(st.session_state.count_m1 + 99))
 
 # --- 4. SIDEBAR NAVIGATION ---
-# 1. Define ALL page instances once at the top
+# 1. PRE-DEFINE ALL PAGE OBJECTS (Identity remains constant)
 welcome_p = st.Page(welcome_home, title="Welcome", icon="🏠")
 m1_p = st.Page(training_module_1, title="1. Pre-Flight", icon="🛠️")
 m2_p = st.Page(training_module_2, title="2. The Jump", icon="🍌")
 m3_p = st.Page(training_module_3, title="3. Crisis Mgmt", icon="🚨")
+grad_p = st.Page(graduation_screen, title="Graduation", icon="🎓")
+mentor_p = st.Page(live_mentor, title="Live Jump Mentor", icon="🛩️")
 
 # 2. Set the default target
 target_p = welcome_p 
 
-# 3. Create the base navigation structure
+# 3. BUILD DYNAMIC PAGES DICTIONARY
 pages = {
     "Start Here": [welcome_p],
     "Training Hangar": [m1_p, m2_p, m3_p]
 }
 
-# 4. Check session state for progress and logged-in status
+# 4. GET CURRENT PROGRESS
 current_s = st.session_state.get("training_step", 1)
 
-# Add conditional pages if user is qualified
+# Add conditional pages ONLY if they have passed Phase 3
 if current_s > 3:
-    grad_p = st.Page(graduation_screen, title="Graduation", icon="🎓")
-    mentor_p = st.Page(live_mentor, title="Live Jump Mentor", icon="🛩️")
     pages["Training Hangar"].append(grad_p)
     pages["Operations"] = [mentor_p]
 
-# 5. Logic to jump to the correct module
+# 5. ASSIGN TARGET PAGE BASED ON LOGGED-IN STATUS
 if "user_email" in st.session_state:
     if current_s == 1: target_p = m1_p
     elif current_s == 2: target_p = m2_p
     elif current_s == 3: target_p = m3_p
-    elif current_s == 4:
-        # Graduation only exists if current_s > 3
-        target_p = pages["Training Hangar"][-1]
+    elif current_s == 4: target_p = grad_p
 
-# 6. Execute Navigation with the synced target_p
+# 6. EXECUTE NAVIGATION
+# default_page MUST be an exact object already inside 'pages'
 pg = st.navigation(pages, position="sidebar", default_page=target_p)
 
 # --- 5. SIDEBAR UTILITIES ---
