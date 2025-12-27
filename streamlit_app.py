@@ -430,49 +430,51 @@ def graduation_screen():
     # Show a mock certificate
     st.info("CERTIFICATE ID: SH-2025-" + str(st.session_state.count_m1 + 99))
 
-
-
 # --- 4. SIDEBAR NAVIGATION ---
-# 1. PRE-DEFINE PAGE INSTANCES (Do this once at the top)
+# 1. Define ALL page instances once at the top
 welcome_p = st.Page(welcome_home, title="Welcome", icon="🏠")
 m1_p = st.Page(training_module_1, title="1. Pre-Flight", icon="🛠️")
 m2_p = st.Page(training_module_2, title="2. The Jump", icon="🍌")
 m3_p = st.Page(training_module_3, title="3. Crisis Mgmt", icon="🚨")
 
-# 2. INITIALIZE TARGET PAGE WITH FALLBACK
+# 2. Set the default target
 target_p = welcome_p 
 
-# 3. BUILD DYNAMIC PAGES DICTIONARY
+# 3. Create the base navigation structure
 pages = {
     "Start Here": [welcome_p],
     "Training Hangar": [m1_p, m2_p, m3_p]
 }
 
-# 4. ADD GRADUATION/MENTOR IF QUALIFIED
+# 4. Check session state for progress and logged-in status
 current_s = st.session_state.get("training_step", 1)
 
+# Add conditional pages if user is qualified
 if current_s > 3:
     grad_p = st.Page(graduation_screen, title="Graduation", icon="🎓")
     mentor_p = st.Page(live_mentor, title="Live Jump Mentor", icon="🛩️")
     pages["Training Hangar"].append(grad_p)
     pages["Operations"] = [mentor_p]
 
-# 5. ASSIGN TARGET PAGE BASED ON LOGGED-IN STATUS
+# 5. Logic to jump to the correct module
 if "user_email" in st.session_state:
     if current_s == 1: target_p = m1_p
     elif current_s == 2: target_p = m2_p
     elif current_s == 3: target_p = m3_p
-    elif current_s == 4: target_p = grad_p
+    elif current_s == 4:
+        # Graduation only exists if current_s > 3
+        target_p = pages["Training Hangar"][-1]
 
-# 6. EXECUTE NAVIGATION (Line 477)
-# By using the pre-defined variables, target_p is guaranteed to be in 'pages'
+# 6. Execute Navigation with the synced target_p
 pg = st.navigation(pages, position="sidebar", default_page=target_p)
 
 # --- 5. SIDEBAR UTILITIES ---
 with st.sidebar:
-    st.write(f"**Current Progress:** You are at stage {st.session_state.get('training_step', 1)} of 4")
+    st.image("TECHDEMO.png", width='stretch')
+    st.markdown("---")
+    st.write(f"**Current Progress:** You are at stage {current_s} of 4")
+    
     if st.button("Reset Tech Demo"):
-        # Reset all markers and clear specific session state keys
         st.session_state.training_step = 1
         st.session_state.count_m1 = 0
         st.session_state.count_m2 = 0
@@ -482,5 +484,5 @@ with st.sidebar:
                 del st.session_state[key]
         st.rerun()
 
-# This is the ONLY place pg.run() should be called
+# This is the only place pg.run() should be called
 pg.run()
