@@ -137,16 +137,19 @@ def welcome_home():
             input {
                 background-color: #ffffff !important;
                 border: 1px solid #d1d5db !important;
+                padding: 10px !important; /* Adds a bit of 'breathing room' for mobile thumbs */
             }
         </style>
     """, unsafe_allow_html=True)
-    user_name = st.text_input("Enter your Full Name", max_chars=50)
-    user_email = st.text_input("Enter your Email Address", max_chars=50)
+    col1, _ = st.columns([2, 3])
+    with col1:
+        user_name = st.text_input("Enter your Full Name", max_chars=50)
+        user_email = st.text_input("Enter your Email Address", max_chars=50)
 
-    if st.button("Begin Training"):
-        if user_name and user_email:
+        if st.button("Begin Training"):
+            if user_name and user_email:
             # 1. Sync to Supabase (Project Prefix: skyhigh_users)
-            data = {
+                data = {
                 "full_name": user_name,
                 "email": user_email,
                 "training_step": 1
