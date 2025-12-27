@@ -146,23 +146,36 @@ def welcome_home():
         user_name = st.text_input("Enter your Full Name", max_chars=50)
         user_email = st.text_input("Enter your Email Address", max_chars=50)
 
-        if st.button("Begin Training"):
+        if st.button("Begin / Resume Training"):
             if user_name and user_email:
-            # 1. Sync to Supabase (Project Prefix: skyhigh_users)
+            # 1. First, check if the user already exists to get their current step
+                response = supabase.table("skyhigh_users").select("training_step").eq("email", user_email).execute()
+                
+                if response.data:
+                    # Returning User: Fetch their saved progress
+                    current_step = response.data[0]["training_step"]
+                    st.success(f"Welcome back, {user_name}! Resuming at Stage {current_step}.")
+                else:
+                    # New User: Start at Step 1
+                    current_step = 1
+                    st.success(f"Welcome to SkyHigh, {user_name}! Starting your journey.")
+
+                # 2. Perform the Upsert to ensure Name is updated or record is created
                 data = {
-                "full_name": user_name,
-                "email": user_email,
-                "training_step": 1
-            }
-            # 'upsert' will update existing users or insert new ones
-            supabase.table("skyhigh_users").upsert(data, on_conflict="email").execute()
-            
-            # 2. Store in session state for current use
-            st.session_state.user_name = user_name
-            st.session_state.user_email = user_email
-            
-            # 3. Move to Phase 1
-            st.switch_page(st.Page(training_module_1))
+                    "full_name": user_name,
+                    "email": user_email,
+                    "training_step": current_step
+                }
+                supabase.table("skyhigh_users").upsert(data, on_conflict="email").execute()
+
+                # 3. Store in session state and "Jump"
+                st.session_state.user_name = user_name
+                st.session_state.user_email = user_email
+                st.session_state.current_step = current_step
+                
+                # Trigger the balloons and a rerun to move to the correct page
+                st.balloons()
+                st.rerun()
         else:
             st.warning("Please enter your name and email to continue.")
 
@@ -180,10 +193,9 @@ def welcome_home():
                 
     ### FAQ
     1. **What platform is this built on?**: This is a custom-designed platform built inhouse by the Pete Burnett Visuals team. This means we can adapt and expand it for all clients and applications.
-    2. **What AI system is used?**: The engine behind the system is Google's Gemini system. (2.0 Flash) We use a technique called RAG to ensure it stays focussed on the textbook.
-    3. **Who created the videos?**: The videos were also created inhouse, specifically for the purposes of this demo.
-    4. **Is SkyHigh a real company?**: No - they are ficitious, created by us for the purposes of this demo.
-    5. **How do I get in touch?**: You can contact us via our website at https://www.peteburnettvisuals.com.
+    2. **Who created the videos?**: The videos were also created inhouse, specifically for the purposes of this demo.
+    3. **Is SkyHigh a real company?**: No - they are ficitious, created by us for the purposes of this demo.
+    4. **How do I get in touch?**: You can contact us via our website at https://www.peteburnettvisuals.com.
               
     """)
 
