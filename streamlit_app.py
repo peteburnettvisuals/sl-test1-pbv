@@ -155,7 +155,7 @@ def welcome_home():
                 "training_step": 1
             }
             # 'upsert' will update existing users or insert new ones
-            supabase.table("skyhigh_users").upsert(data).execute()
+            supabase.table("skyhigh_users").upsert(data, on_conflict="email").execute()
             
             # 2. Store in session state for current use
             st.session_state.user_name = user_name
