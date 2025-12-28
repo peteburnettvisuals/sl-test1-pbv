@@ -207,6 +207,15 @@ def welcome_home():
 
 # --- PHASE 1: EQUIPMENT ---
 def training_module_1():
+    # 1. CHECK CREDENTIALS FIRST
+    if "user_email" not in st.session_state:
+        st.title("🛫 Section 1: Equipment & Pre-Flight")
+        st.warning("🔒 Access Restricted. Please return to the 'Welcome' page and enter your details to begin your training.")
+        if st.button("Go to Welcome Page"):
+            st.switch_page(welcome_p)
+        return # This stops the rest of the function from running
+    
+    # 2. IF LOGGED IN, SHOW THE CONTENT
     st.title("Section 1: Equipment & Pre-Flight")
     st.write(f"Ready for takeoff, {st.session_state.user_name}?")
     st.video("https://www.youtube.com/watch?v=74DSBbwm_UY")
@@ -264,7 +273,7 @@ STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factua
                             .execute()
                     except Exception as e:
                         st.error(f"Cloud Sync Error: {e}")
-                        
+
                     del st.session_state.current_question_text 
                     # 2. Add a pause so they see the balloons and success message
                     time.sleep(3) 
