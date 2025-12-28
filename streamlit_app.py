@@ -277,6 +277,7 @@ STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factua
                     # 2. Add a pause so they see the balloons and success message
                     time.sleep(3) 
                     # 3. Jump to next module
+                    st.rerun()
                     st.switch_page(m2_p) # Jump to the Module 2 page object
                 else:
                     st.toast("Great job! One more.", icon="✅")
@@ -364,6 +365,7 @@ STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factua
                         # 2. Add a pause so they see the balloons and success message
                         time.sleep(3) 
                         # 3. Jump to next module
+                        st.rerun()
                         st.switch_page(m3_p) # Jump to the Module 3 page object
                     else:
                         st.toast("Solid form! One more.", icon="✅")
@@ -441,6 +443,7 @@ STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factua
                         # 2. Add a pause so they see the balloons and success message
                         time.sleep(3) 
                         # 3. Jump to grad page
+                        st.rerun()
                         st.switch_page(grad_p) # Jump to the graduation page object
                     else:
                         st.toast("Cool under pressure! One more.", icon="✅")
