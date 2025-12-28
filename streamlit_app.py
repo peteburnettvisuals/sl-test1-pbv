@@ -475,8 +475,8 @@ def graduation_screen():
     # Show a mock certificate
     st.info("CERTIFICATE ID: SH-2025-" + str(st.session_state.count_m1 + 99))
 
+
 # --- 4. SIDEBAR NAVIGATION ---
-# 1. Define ALL page instances once at the top
 welcome_p = st.Page(welcome_home, title="Welcome", icon="🏠")
 m1_p = st.Page(training_module_1, title="1. Pre-Flight", icon="🛠️")
 m2_p = st.Page(training_module_2, title="2. The Jump", icon="🍌")
@@ -484,39 +484,24 @@ m3_p = st.Page(training_module_3, title="3. Crisis Mgmt", icon="🚨")
 grad_p = st.Page(graduation_screen, title="Graduation", icon="🎓")
 mentor_p = st.Page(live_mentor, title="Live Jump Mentor", icon="🛩️")
 
-# 2. Set a guaranteed default target
-target_p = welcome_p 
+current_s = st.session_state.get("training_step", 1)
 
-# 3. Build the dynamic pages dictionary
 pages = {
     "Start Here": [welcome_p],
     "Training Hangar": [m1_p, m2_p, m3_p]
 }
 
-# 4. Check session state for progress
-current_s = st.session_state.get("training_step", 1)
-
 if current_s >= 4:
     pages["Training Hangar"].append(grad_p)
     pages["Operations"] = [mentor_p]
 
-# 5. Assign target_p based on logged-in status
-if "user_email" in st.session_state:
-    if current_s == 1: target_p = m1_p
-    elif current_s == 2: target_p = m2_p
-    elif current_s == 3: target_p = m3_p
-    elif current_s >= 4: target_p = grad_p
+# CRITICAL: No 'default_page' here. This stops the TypeError.
+pg = st.navigation(pages, position="sidebar")
 
-# 6. Execute Navigation with the IDENTICAL target_p object
-pg = st.navigation(pages, position="sidebar", default_page=target_p)
-
-
-# --- 5. SIDEBAR UTILITIES ---
 with st.sidebar:
     st.image("TECHDEMO.png", width='stretch')
     st.markdown("---")
     st.write(f"**Current Progress:** Stage {current_s} of 4")
-    
     if st.button("Reset Tech Demo"):
         # Reset markers
         st.session_state.training_step = 1
@@ -529,5 +514,5 @@ with st.sidebar:
                 del st.session_state[key]
         st.rerun()
 
-# 6. Render the app
 pg.run()
+
