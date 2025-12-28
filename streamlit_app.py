@@ -291,6 +291,7 @@ STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factua
 
 # --- PHASE 2: MANEUVER ---
 def training_module_2():
+    global m1_p, m2_p, m3_p, grad_p
     if st.session_state.training_step < 2:
         st.warning("🔒 Complete Section 1 to unlock this module.")
     else:
@@ -379,6 +380,7 @@ STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factua
 
 # --- PHASE 3: SURVIVAL ---
 def training_module_3():
+    global m1_p, m2_p, m3_p, grad_p
     if st.session_state.training_step < 3:
         st.warning("🔒 Complete Phase 2 to unlock this module.")
     else:
