@@ -481,7 +481,8 @@ m3_p = st.Page(training_module_3, title="3. Crisis Mgmt", icon="🚨")
 grad_p = st.Page(graduation_screen, title="Graduation", icon="🎓")
 mentor_p = st.Page(live_mentor, title="Live Jump Mentor", icon="🛩️")
 
-# 2. Safely check for progress
+# 2. Get the latest step (Use session_state first for immediate updates)
+# This ensures that as soon as st.session_state.training_step = 4, this block sees it
 current_s = st.session_state.get("training_step", 1)
 
 # 3. Build the pages dictionary
@@ -490,12 +491,13 @@ pages = {
     "Training Hangar": [m1_p, m2_p, m3_p]
 }
 
-# 4. Add Conditional Pages if step is high enough
-if current_s > 3:
+# 4. Add Graduation & Operations
+# This must trigger the moment current_s becomes 4
+if current_s >= 4:
     pages["Training Hangar"].append(grad_p)
     pages["Operations"] = [mentor_p]
 
-# 5. Simple Navigation - No 'default_page' jump logic for now
+# 5. Initialize Navigation
 pg = st.navigation(pages, position="sidebar")
 
 # --- 5. SIDEBAR UTILITIES ---
