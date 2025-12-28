@@ -366,7 +366,7 @@ STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factua
                         time.sleep(3) 
                         # 3. Jump to next module
                         st.rerun()
-                        st.switch_page(m3_p) # Jump to the Module 3 page object
+                        
                     else:
                         st.toast("Solid form! One more.", icon="✅")
                         del st.session_state.current_question_text
@@ -444,7 +444,7 @@ STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factua
                         time.sleep(3) 
                         # 3. Jump to grad page
                         st.rerun()
-                        st.switch_page(grad_p) # Jump to the graduation page object
+                        
                     else:
                         st.toast("Cool under pressure! One more.", icon="✅")
                         del st.session_state.current_question_text
@@ -501,7 +501,22 @@ if current_s >= 4:
     pages["Operations"] = [mentor_p]
 
 # 5. Initialize Navigation
-pg = st.navigation(pages, position="sidebar")
+# 2. Get the latest step
+current_s = st.session_state.get("training_step", 1)
+
+# 3. SET THE TARGET PAGE
+# If we just logged in OR just leveled up, we want to force a jump
+target_p = welcome_p 
+
+if "user_email" in st.session_state:
+    if current_s == 1: target_p = m1_p
+    elif current_s == 2: target_p = m2_p
+    elif current_s == 3: target_p = m3_p
+    elif current_s >= 4: target_p = grad_p
+
+# 4. INITIALIZE NAVIGATION with the dynamic default_page
+# This "default_page" is what forces the app to the new module after the rerun
+pg = st.navigation(pages, position="sidebar", default_page=target_p)
 
 # --- 5. SIDEBAR UTILITIES ---
 with st.sidebar:
