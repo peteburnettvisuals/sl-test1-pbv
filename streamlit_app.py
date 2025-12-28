@@ -167,7 +167,6 @@ def welcome_home():
                 data = {"full_name": user_name, "email": user_email, "training_step": training_step}
                 supabase.table("skyhigh_users").upsert(data, on_conflict="email").execute()
 
-                st.balloons()
                 time.sleep(1.5) # Give them a second to see the success message
                 
                 # 🚀 THE SAFE JUMP: Teleport based on the step
@@ -278,7 +277,7 @@ STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factua
                     # 2. Add a pause so they see the balloons and success message
                     time.sleep(3) 
                     # 3. Jump to next module
-                    st.switch_page(st.Page(training_module_2))
+                    st.switch_page(m2_p) # Jump to the Module 2 page object
                 else:
                     st.toast("Great job! One more.", icon="✅")
                     del st.session_state.current_question_text
@@ -365,7 +364,7 @@ STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factua
                         # 2. Add a pause so they see the balloons and success message
                         time.sleep(3) 
                         # 3. Jump to next module
-                        st.switch_page(st.Page(training_module_3)) 
+                        st.switch_page(m3_p) # Jump to the Module 3 page object
                     else:
                         st.toast("Solid form! One more.", icon="✅")
                         del st.session_state.current_question_text
@@ -442,7 +441,7 @@ STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factua
                         # 2. Add a pause so they see the balloons and success message
                         time.sleep(3) 
                         # 3. Jump to grad page
-                        st.switch_page(st.Page(graduation_screen))
+                        st.switch_page(grad_p) # Jump to the graduation page object
                     else:
                         st.toast("Cool under pressure! One more.", icon="✅")
                         del st.session_state.current_question_text
