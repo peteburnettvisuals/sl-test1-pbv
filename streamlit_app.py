@@ -500,22 +500,26 @@ if current_s >= 4:
     pages["Training Hangar"].append(grad_p)
     pages["Operations"] = [mentor_p]
 
-# 5. Initialize Navigation
 # 2. Get the latest step
 current_s = st.session_state.get("training_step", 1)
 
 # 3. SET THE TARGET PAGE
-# If we just logged in OR just leveled up, we want to force a jump
+# We initialize the target to the Welcome page as the base fallback
 target_p = welcome_p 
 
+# Logic to determine where the user should be "dropped" in the app
 if "user_email" in st.session_state:
-    if current_s == 1: target_p = m1_p
-    elif current_s == 2: target_p = m2_p
-    elif current_s == 3: target_p = m3_p
-    elif current_s >= 4: target_p = grad_p
+    if current_s == 1: 
+        target_p = m1_p
+    elif current_s == 2: 
+        target_p = m2_p
+    elif current_s == 3: 
+        target_p = m3_p
+    elif current_s >= 4: 
+        target_p = grad_p
 
-# 4. INITIALIZE NAVIGATION with the dynamic default_page
-# This "default_page" is what forces the app to the new module after the rerun
+# 4. INITIALIZE NAVIGATION
+# The "default_page" acts as the landing pad after every st.rerun()
 pg = st.navigation(pages, position="sidebar", default_page=target_p)
 
 # --- 5. SIDEBAR UTILITIES ---
