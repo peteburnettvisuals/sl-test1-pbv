@@ -476,7 +476,7 @@ def graduation_screen():
     st.info("CERTIFICATE ID: SH-2025-" + str(st.session_state.count_m1 + 99))
 
 # --- 4. SIDEBAR NAVIGATION ---
-# 1. Define all page objects once
+# 1. Define ALL page instances once at the top
 welcome_p = st.Page(welcome_home, title="Welcome", icon="🏠")
 m1_p = st.Page(training_module_1, title="1. Pre-Flight", icon="🛠️")
 m2_p = st.Page(training_module_2, title="2. The Jump", icon="🍌")
@@ -484,43 +484,32 @@ m3_p = st.Page(training_module_3, title="3. Crisis Mgmt", icon="🚨")
 grad_p = st.Page(graduation_screen, title="Graduation", icon="🎓")
 mentor_p = st.Page(live_mentor, title="Live Jump Mentor", icon="🛩️")
 
-# 2. Get the latest step (Use session_state first for immediate updates)
-# This ensures that as soon as st.session_state.training_step = 4, this block sees it
-current_s = st.session_state.get("training_step", 1)
+# 2. Set a guaranteed default target
+target_p = welcome_p 
 
-# 3. Build the pages dictionary
+# 3. Build the dynamic pages dictionary
 pages = {
     "Start Here": [welcome_p],
     "Training Hangar": [m1_p, m2_p, m3_p]
 }
 
-# 4. Add Graduation & Operations
-# This must trigger the moment current_s becomes 4
+# 4. Check session state for progress
+current_s = st.session_state.get("training_step", 1)
+
 if current_s >= 4:
     pages["Training Hangar"].append(grad_p)
     pages["Operations"] = [mentor_p]
 
-# 2. Get the latest step
-current_s = st.session_state.get("training_step", 1)
-
-# 3. SET THE TARGET PAGE
-# We initialize the target to the Welcome page as the base fallback
-target_p = welcome_p 
-
-# Logic to determine where the user should be "dropped" in the app
+# 5. Assign target_p based on logged-in status
 if "user_email" in st.session_state:
-    if current_s == 1: 
-        target_p = m1_p
-    elif current_s == 2: 
-        target_p = m2_p
-    elif current_s == 3: 
-        target_p = m3_p
-    elif current_s >= 4: 
-        target_p = grad_p
+    if current_s == 1: target_p = m1_p
+    elif current_s == 2: target_p = m2_p
+    elif current_s == 3: target_p = m3_p
+    elif current_s >= 4: target_p = grad_p
 
-# 4. INITIALIZE NAVIGATION
-# The "default_page" acts as the landing pad after every st.rerun()
+# 6. Execute Navigation with the IDENTICAL target_p object
 pg = st.navigation(pages, position="sidebar", default_page=target_p)
+
 
 # --- 5. SIDEBAR UTILITIES ---
 with st.sidebar:
