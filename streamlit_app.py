@@ -255,6 +255,16 @@ STRICT RULE: Only ONE of the four lettered options (A, B, C, or D) can be factua
                     st.success("🎯 Mastery achieved! Phase 2: The Jump is now unlocked.")
                     st.session_state.training_step = 2
                     st.session_state.quiz_active = False
+
+                    # 2. Update the Cloud Record (The Trail of Breadcrumbs)
+                    try:
+                        supabase.table("skyhigh_users") \
+                            .update({"training_step": 2}) \
+                            .eq("email", st.session_state.user_email) \
+                            .execute()
+                    except Exception as e:
+                        st.error(f"Cloud Sync Error: {e}")
+                        
                     del st.session_state.current_question_text 
                     # 2. Add a pause so they see the balloons and success message
                     time.sleep(3) 
